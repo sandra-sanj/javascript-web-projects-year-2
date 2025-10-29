@@ -23,9 +23,5 @@ numbers.sort((a, b) => a - b);
 printArrayContents(numbers);
 
 function printArrayContents(array) {
-  let arrayContents = '';
-  for (let item of array) {
-    arrayContents += `${item}, `;
-  }
-  console.log(`Array contents: [${arrayContents}]`);
+  console.log(`Array contents: [${array}]`);
 }
