@@ -772,13 +772,96 @@ const restaurants = [
 
 console.log('all restaurants', restaurants);
 
-// get location
-const locationElement = document.getElementById('location');
 const defaultCoordinates = {
   latitude: 60.22366,
   longitude: 25.07946,
 };
-let selfCoordinates = defaultCoordinates;
+let selfCoordinates;
+let sortedRestaurants;
+
+// get location
+const locationElement = document.getElementById('location');
+const table = document.querySelector('table');
+
+const calculateDistanceTo = (lon1, lat1, lon2, lat2) => {
+  return Math.sqrt((lat2 - lat1) ** 2 + (lon2 - lon1) ** 2) * 111;
+};
+
+const filterSortMapRestaurants = () => {
+  // filter array from any entries without any location data
+  const validRestaurants = restaurants.filter(
+    (r) => r?.location?.coordinates?.length == 2
+  );
+  console.log('restaurants with valid location data', validRestaurants);
+
+  // map array and add distance variable
+  const mappedRestaurants = validRestaurants.map((restaurant) => {
+    const [rLongitude, rLatitude] = restaurant.location.coordinates;
+    console.log(selfCoordinates);
+    const distance = calculateDistanceTo(
+      selfCoordinates.longitude,
+      selfCoordinates.latitude,
+      rLongitude,
+      rLatitude
+    );
+    return {...restaurant, distance: distance};
+  });
+  console.log('restaurants with distances', mappedRestaurants);
+
+  // sort array by distance in ascending order
+  sortedRestaurants = mappedRestaurants.sort(
+    (r1, r2) => r1.distance - r2.distance
+  );
+  console.log('sorted restaurants', sortedRestaurants);
+};
+
+const renderUI = (array) => {
+  array.forEach((e) => {
+    let tr = document.createElement('tr');
+    let trInner = `
+    <td>${e.name}</td><td>${e.address}</td><td>~&nbsp;${e.distance.toFixed(
+      1
+    )}km</td>
+  `;
+    tr.innerHTML = trInner;
+    table.appendChild(tr);
+  });
+};
+
+const renderMap = (array) => {
+  const map = L.map('map').setView(
+    [selfCoordinates.latitude, selfCoordinates.longitude],
+    13
+  );
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
+
+  const userIcon = L.icon({
+    iconUrl:
+      'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-red.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+    shadowSize: [41, 41],
+  });
+
+  L.marker([selfCoordinates.latitude, selfCoordinates.longitude], {
+    icon: userIcon,
+  }).addTo(map);
+
+  array.forEach((restaurant) => {
+    const [rLongitude, rLatitude] = restaurant.location.coordinates;
+
+    const marker = L.marker([rLatitude, rLongitude]).addTo(map);
+
+    marker.bindPopup(`<h3>${restaurant.name}</h3><p>${restaurant.address}</p>`);
+  });
+};
 
 const locationSuccess = (position) => {
   selfCoordinates = {
@@ -792,12 +875,14 @@ const locationSuccess = (position) => {
   locationElement.innerText = `Location: ${latitude.toFixed(
     5
   )}, ${longitude.toFixed(5)}`;
+  continueAfterLocation();
 };
 
-const locationError = (position) => {
+const locationError = () => {
   locationElement.innerText =
     'Sorry, no position available. Using default location';
   selfCoordinates = defaultCoordinates;
+  continueAfterLocation();
 };
 
 const getLocation = () => {
@@ -808,128 +893,12 @@ const getLocation = () => {
   }
 };
 
+// function called after location has been saved
+const continueAfterLocation = () => {
+  filterSortMapRestaurants();
+  renderUI(sortedRestaurants);
+  renderMap(sortedRestaurants);
+};
+
+// first get location
 getLocation();
-
-const calculateDistanceTo = (lon1, lat1, lon2, lat2) => {
-  return Math.sqrt((lat2 - lat1) ** 2 + (lon2 - lon1) ** 2);
-};
-
-const proceedWithLocation = () => {
-  // filter array from any entries without any location data
-  const sortedRestaurants = restaurants.filter(
-    (r) => r?.location?.coordinates?.length == 2
-  );
-  console.log('restaurants with location data', sortedRestaurants);
-
-  // map array and add distance variable
-  const mappedRestaurants = sortedRestaurants.map((restaurant) => {
-    const [rLongitude, rLatitude] = restaurant.location.coordinates;
-    const distance = calculateDistanceTo(
-      selfCoordinates.longitude,
-      selfCoordinates.latitude,
-      rLongitude,
-      rLatitude
-    );
-    return {...restaurant, distance: distance};
-  });
-  console.log('restaurants with distances', mappedRestaurants);
-
-  // sort array by distance in ascending order
-  const sortedMappedRestaurants = mappedRestaurants.sort(
-    (r1, r2) => r1.distance - r2.distance
-  );
-  console.log('sorted mapped restaurants', sortedMappedRestaurants);
-
-  // place arrays to table in UI
-  const table = document.querySelector('table');
-
-  const renderUI = (array) => {
-    array.forEach((e) => {
-      let tr = document.createElement('tr');
-      let trInner = `
-      <td>${e.name}</td><td>${e.address}</td><td>~&nbsp;${e.distance.toFixed(
-        1
-      )}km</td>
-    `;
-      tr.innerHTML = trInner;
-      table.appendChild(tr);
-    });
-  };
-  renderUI(sortedMappedRestaurants);
-
-  const renderMap = (array) => {
-    const map = L.map('map').setView(
-      [selfCoordinates.latitude, selfCoordinates.longitude],
-      13
-    );
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
-
-    const userIcon = L.icon({
-      iconUrl:
-        'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-red.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowUrl:
-        'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-      shadowSize: [41, 41],
-    });
-
-    L.marker([selfCoordinates.latitude, selfCoordinates.longitude], {
-      icon: userIcon,
-    }).addTo(map);
-
-    array.forEach((restaurant) => {
-      const [rLongitude, rLatitude] = restaurant.location.coordinates;
-
-      const marker = L.marker([rLatitude, rLongitude]).addTo(map);
-
-      marker.bindPopup(
-        `<h3>${restaurant.name}</h3><p>${restaurant.address}</p>`
-      );
-    });
-  };
-  renderMap(sortedMappedRestaurants);
-};
-
-proceedWithLocation();
-
-// sort restaurants from nearest to farthest based on current location coordinates
-
-// filter locations that do not have coordinate data at all, or coordinate list does not have 2 length
-/*const sortedRestaurants = restaurants.filter(
-  (r) => r?.location?.coordinates?.length == 2
-);
-console.log('restaurants with location data', sortedRestaurants);*/
-
-/*sortedRestaurants.forEach((restaurant) => {
-  if (restaurant.location.coordinates.length != 2) {
-    console.log(`Location ${restaurant.name} does not have valid coordinates.`);
-  } else {
-    const distance = calculateDistanceTo(restaurant.location.coordinates);
-    console.log(distance);
-  }
-});*/
-
-// insert restaurants to table
-/*const table = document.querySelector('table');
-
-const renderUI = (array) => {
-  array.forEach((e) => {
-    let tr = document.createElement('tr');
-    let trInner = `
-      <td>${e.name}</td><td>${e.address}</td><td>~&nbsp;${e.distance.toFixed(
-      1
-    )}km</td>
-    `;
-    tr.innerHTML = trInner;
-    table.appendChild(tr);
-  });
-};
-
-renderUI();*/
