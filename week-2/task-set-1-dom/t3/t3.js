@@ -36,17 +36,7 @@ const timeLocalized = date.toLocaleTimeString('fi-FI', {
   timeZone: 'Europe/Helsinki',
 });
 
-console.log(dateLocalized);
-console.log(timeLocalized);
-
-const dateElement = document.createElement('p');
-const timeElement = document.createElement('p');
-
-dateElement.innerText = dateLocalized;
-timeElement.innerText = timeLocalized;
-
-liDateTime.appendChild(dateElement);
-liDateTime.appendChild(timeElement);
+liDateTime.innerText = `Date and Time: ${dateLocalized} ${timeLocalized}`;
 
 // add list elements to parent list
 ul.appendChild(liBrowser);
