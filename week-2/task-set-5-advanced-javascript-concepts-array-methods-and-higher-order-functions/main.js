@@ -91,11 +91,46 @@ const renderModalContent = async (restaurant) => {
   modal.showModal(); // open modal
 };
 
+const sodexoCheckbox = document.getElementById('show-sodexo');
+const compassCheckbox = document.getElementById('show-compass');
+
 const renderUI = (array) => {
   const restaurantsTable = document.querySelector('#restaurants tbody');
+  restaurantsTable.innerHTML = ''; // empty table
 
-  if (array.length > 0) {
-    array.forEach((restaurant) => {
+  const headerName = document.createElement('th');
+  headerName.innerText = 'Name';
+  const headerAddress = document.createElement('th');
+  headerAddress.innerText = 'Address';
+
+  const headerRow = document.createElement('tr');
+  headerRow.appendChild(headerName);
+  headerRow.appendChild(headerAddress);
+
+  restaurantsTable.appendChild(headerRow);
+
+  // add filter to filter out restaurants
+  function checkRestaurantCompany(restaurant) {
+    //console.log(sodexoCheckbox.checked, compassCheckbox.checked, restaurant.company);
+
+    if (restaurant.company == 'Sodexo' && sodexoCheckbox.checked) {
+      return true;
+    } else if (
+      restaurant.company == 'Compass Group' &&
+      compassCheckbox.checked
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  const filteredRestaurants =
+    array.length > 0 ? array.filter(checkRestaurantCompany) : [];
+  console.log(filteredRestaurants);
+
+  if (filteredRestaurants.length > 0) {
+    filteredRestaurants.forEach((restaurant) => {
       const row = restaurantRow(restaurant);
       row.addEventListener('click', () => {
         // if element does not have class, remove class from other elements and add to the element
@@ -115,7 +150,7 @@ const renderUI = (array) => {
     const p = document.createElement('p');
     p.innerText = 'Data not available';
 
-    restaurantsTable.innerHTML = '';
+    restaurantsTable.innerHTML = ''; // empty table
     restaurantsTable.appendChild(p);
   }
 };
@@ -129,3 +164,13 @@ console.log('restaurants', restaurants);
 const alphapheticalRestaurants = restaurants.sort((a, b) => a.name > b.name);
 
 renderUI(alphapheticalRestaurants);
+
+sodexoCheckbox.addEventListener('click', (event) => {
+  console.log('sodexo clicked');
+  renderUI(alphapheticalRestaurants);
+});
+
+compassCheckbox.addEventListener('click', (event) => {
+  console.log('compass clicked');
+  renderUI(alphapheticalRestaurants);
+});
