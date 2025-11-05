@@ -4,5 +4,6 @@ const baseUrl = 'https://media2.edu.metropolia.fi/restaurant';
 const lang = 'en';
 
 const highlightClass = 'highlight';
+const closestRestaurantClass = 'closest';
 
-export {baseUrl, lang, highlightClass};
+export {baseUrl, lang, highlightClass, closestRestaurantClass};
