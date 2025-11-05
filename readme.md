@@ -20,3 +20,6 @@
 
 ### Set 3
 [1](https://users.metropolia.fi/~sandraj/javascript-web-projects-year-2/week-2/task-set-3-ajax/task-1/task1.html) | [2](https://users.metropolia.fi/~sandraj/javascript-web-projects-year-2/week-2/task-set-3-ajax/task-2/task2.html) | [3](https://users.metropolia.fi/~sandraj/javascript-web-projects-year-2/week-2/task-set-3-ajax/task-3/task3.html) | [4](https://users.metropolia.fi/~sandraj/javascript-web-projects-year-2/week-2/task-set-3-ajax/task-4/task4.html) | [5](https://users.metropolia.fi/~sandraj/javascript-web-projects-year-2/week-2/task-set-3-ajax/task-5/task5.html)
+
+## Website with REST API
+[Branch](https://github.com/sandra-sanj/javascript-web-projects-year-2/tree/website-with-rest-api) | [Hosted Website (coming)]
