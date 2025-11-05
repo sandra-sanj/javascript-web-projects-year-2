@@ -1,5 +1,10 @@
 import {restaurantRow, restaurantModal} from './components.js';
-import {baseUrl, lang, highlightClass} from './variables.js';
+import {
+  baseUrl,
+  lang,
+  highlightClass,
+  closestRestaurantClass,
+} from './variables.js';
 import {fetchData} from './utils.js';
 
 let filteredRestaurants = [];
@@ -74,7 +79,15 @@ const calculateDistanceTo = (lon1, lat1, lon2, lat2) => {
   return Math.sqrt((lat2 - lat1) ** 2 + (lon2 - lon1) ** 2) * 111;
 };
 
-/*const filterSortMapRestaurants = () => {
+const getClosestRestaurant = (restaurants) => {
+  // sort restaurants array by distance in ascending order
+  const sortedRestaurants = [...restaurants].sort(
+    (r1, r2) => r1.distance - r2.distance
+  );
+  return sortedRestaurants[0];
+};
+
+const addDistanceToRestaurants = (restaurants) => {
   // filter array from any entries without any location data
   const validRestaurants = restaurants.filter(
     (r) => r?.location?.coordinates?.length == 2
@@ -84,7 +97,6 @@ const calculateDistanceTo = (lon1, lat1, lon2, lat2) => {
   // map array and add distance variable
   const mappedRestaurants = validRestaurants.map((restaurant) => {
     const [rLongitude, rLatitude] = restaurant.location.coordinates;
-    console.log(selfCoordinates);
     const distance = calculateDistanceTo(
       selfCoordinates.longitude,
       selfCoordinates.latitude,
@@ -95,12 +107,8 @@ const calculateDistanceTo = (lon1, lat1, lon2, lat2) => {
   });
   console.log('restaurants with distances', mappedRestaurants);
 
-  // sort array by distance in ascending order
-  sortedRestaurants = mappedRestaurants.sort(
-    (r1, r2) => r1.distance - r2.distance
-  );
-  console.log('sorted restaurants', sortedRestaurants);
-};*/
+  return mappedRestaurants;
+};
 
 const renderMapMarkers = (restaurants) => {
   restaurantMarkers.clearLayers();
@@ -226,9 +234,16 @@ const renderUI = (restaurants) => {
 
   restaurantsTable.appendChild(headerRow);
 
+  // get restaurant with least distance and mark its row with special color
+  const closestRestaurant = getClosestRestaurant(restaurants);
+  console.log('closestRestaurant', closestRestaurant);
+  removeClassFromAllElements(closestRestaurantClass);
+
   if (restaurants.length > 0) {
     restaurants.forEach((restaurant) => {
       const row = restaurantRow(restaurant);
+
+      // add event to table row
       row.addEventListener('click', () => {
         // if element does not have class, remove class from other elements and add to the element
         // if element has class, remove it
@@ -241,6 +256,11 @@ const renderUI = (restaurants) => {
         }
       });
       restaurantsTable.appendChild(row);
+
+      // determine if restaurant is closest, if so add id to row element
+      if (restaurant.name === closestRestaurant.name) {
+        addClassToElement(row, closestRestaurantClass);
+      }
     });
   } else {
     // display message in UI if no restaurants available
@@ -255,8 +275,6 @@ const renderUI = (restaurants) => {
 const filterRestaurants = (unfilteredRestaurants) => {
   // add filter to filter out restaurants
   function checkRestaurantCompany(restaurant) {
-    //console.log(sodexoCheckbox.checked, compassCheckbox.checked, restaurant.company);
-
     if (restaurant.company == 'Sodexo' && sodexoCheckbox.checked) {
       return true;
     } else if (
@@ -265,12 +283,13 @@ const filterRestaurants = (unfilteredRestaurants) => {
     ) {
       return true;
     }
-
     return false;
   }
 
   filteredRestaurants =
-    unfilteredRestaurants.length > 0 ? unfilteredRestaurants.filter(checkRestaurantCompany) : [];
+    unfilteredRestaurants.length > 0
+      ? unfilteredRestaurants.filter(checkRestaurantCompany)
+      : [];
   console.log(filteredRestaurants);
 };
 
@@ -279,11 +298,18 @@ const filterRestaurants = (unfilteredRestaurants) => {
 const restaurants = await getRestaurants();
 console.log('restaurants', restaurants);
 
-// order list in alphaphetical order
-const alphapheticalRestaurants = restaurants.sort((a, b) => a.name > b.name);
+const restaurantsWithDistance = [];
+const alphapheticalRestaurants = [];
 
 // function called after location has been saved
 const continueAfterLocation = () => {
+  restaurantsWithDistance.push(...addDistanceToRestaurants(restaurants));
+
+  const sortedByName = [...restaurantsWithDistance].sort(
+    (a, b) => a.name > b.name
+  );
+  alphapheticalRestaurants.push(...sortedByName);
+
   renderUI(alphapheticalRestaurants);
   renderMap();
   renderMapMarkers(alphapheticalRestaurants);
