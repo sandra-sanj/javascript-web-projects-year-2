@@ -46,6 +46,10 @@ td {
   font-weight: 800;
 }
 
+.closest {
+  background-color: rgb(135, 138, 169) !important;
+}
+
 #modal {
   width: 80%;
   height: 60%;
