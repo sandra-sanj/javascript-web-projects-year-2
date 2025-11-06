@@ -7,6 +7,7 @@ import {
   putCat,
   deleteCat,
 } from '../controllers/cat-controller.js';
+import {createThumbnail} from '../../middlewares.js';
 
 const catRouter = express.Router();
 
@@ -18,6 +19,6 @@ catRouter.route('/:id').get(getCatById).put(putCat).delete(deleteCat);
 
 // use multer for post
 const upload = multer({dest: 'uploads/'});
-catRouter.post('/', upload.single('file'), postCat);
+catRouter.post('/', upload.single('file'), createThumbnail, postCat);
 
 export default catRouter;
