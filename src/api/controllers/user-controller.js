@@ -3,15 +3,15 @@ import {
   findUserById,
   listAllUsers,
   removeUser,
-  updateUser,
+  modifyUser,
 } from '../models/user-model.js';
 
-const getUser = (req, res) => {
-  res.json(listAllUsers());
+const getUser = async (req, res) => {
+  res.json(await listAllUsers());
 };
 
-const getUserById = (req, res) => {
-  const user = findUserById(req.params.id);
+const getUserById = async (req, res) => {
+  const user = await findUserById(req.params.id);
 
   if (user) {
     res.json(user);
@@ -20,8 +20,17 @@ const getUserById = (req, res) => {
   }
 };
 
-const postUser = (req, res) => {
-  const result = addUser(req.body);
+const postUser = async (req, res) => {
+  // log data to console
+  console.log('data from client', req.body);
+  console.log('data from file', req.file);
+
+  const userData = {
+    ...req.body,
+    filename: req.file?.filename,
+  };
+
+  const result = await addUser(userData);
 
   if (result.user_id) {
     res.status(201);
@@ -31,10 +40,13 @@ const postUser = (req, res) => {
   }
 };
 
-const putUser = (req, res) => {
-  const result = updateUser(req.body);
+const putUser = async (req, res) => {
+  console.log('data from client', req.body);
 
-  if (result?.user_id) {
+  const {user_id, ...userData} = req.body;
+  const result = await modifyUser(userData, user_id);
+
+  if (result) {
     res.status(201).json({message: 'User updated.', result});
   } else {
     res
@@ -43,10 +55,10 @@ const putUser = (req, res) => {
   }
 };
 
-const deleteUser = (req, res) => {
-  const result = removeUser(req.params.id);
+const deleteUser = async (req, res) => {
+  const result = await removeUser(req.params.id);
 
-  if (result?.user_id) {
+  if (result) {
     res.status(200).json({message: 'User deleted.', result});
   } else {
     res

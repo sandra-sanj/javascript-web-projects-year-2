@@ -1,71 +1,64 @@
-// mock data
-const userItems = [
-  {
-    user_id: 36010,
-    name: 'John Doe',
-    username: 'johndoe',
-    email: 'john@metropolia.fi',
-    role: 'user',
-    password: 'password',
-  },
-  {
-    user_id: 3609,
-    name: 'Mary Doe',
-    username: 'marydoe',
-    email: 'mary@metropolia.fi',
-    role: 'user',
-    password: 'password',
-  },
-  {
-    user_id: 3608,
-    name: 'Sue Doe',
-    username: 'suedoe',
-    email: 'sue@metropolia.fi',
-    role: 'user',
-    password: 'password',
-  },
-];
+// Note: db functions are async and must be called with await from the controller
+// How to handle errors in controller?
+import promisePool from '../../utils/database.js';
 
-const listAllUsers = () => {
-  return userItems;
+const listAllUsers = async () => {
+  const result = await promisePool.query('SELECT * FROM wsk_users');
+  //console.log('result', result);
+  const rows = result[0];
+
+  return rows;
 };
 
-const findUserById = (id) => {
-  return userItems.find((item) => item.user_id == id);
-};
-
-const addUser = (user) => {
-  const {name, username, email, role, password} = user;
-  const newId = userItems[0].user_id + 1;
-  userItems.unshift({
-    user_id: newId,
-    name,
-    username,
-    email,
-    role,
-    password,
-  });
-  return {user_id: newId};
-};
-
-const removeUser = (id) => {
-  const user = findUserById(id);
-  return user ? userItems.pop(user) : false;
-};
-
-const updateUser = (user) => {
-  // check if user with id exists
-  const oldUserData = findUserById(user.user_id);
-  if (!oldUserData) {
-    return null;
+const findUserById = async (id) => {
+  const [rows] = await promisePool.execute(
+    'SELECT * FROM wsk_users WHERE user_id = ?',
+    [id]
+  );
+  console.log('rows', rows);
+  if (rows.length === 0) {
+    return false;
   }
-
-  // keep old user data and update with new data
-  const updatedUser = {
-    ...oldUserData,
-    ...user,
-  };
-  return updatedUser;
+  return rows[0];
 };
 
-export {listAllUsers, findUserById, addUser, removeUser, updateUser};
+const addUser = async (user) => {
+  const {name, username, email, password, role} = user;
+  const sql = `INSERT INTO wsk_users (name, username, email, password, role)
+               VALUES (?, ?, ?, ?, ?)`;
+  const params = [name, username, email, password, role];
+  const result = await promisePool.execute(sql, params);
+  console.log('result', result);
+  if (result[0].affectedRows === 0) {
+    return false;
+  }
+  return {user_id: result[0].insertId};
+};
+
+const modifyUser = async (user, id) => {
+  const sql = promisePool.format(`UPDATE wsk_users SET ? WHERE user_id = ?`, [
+    user,
+    id,
+  ]);
+
+  const [result] = await promisePool.execute(sql);
+  if (result.changedRows === 0) {
+    return false;
+  }
+  return {message: 'success'};
+};
+
+const removeUser = async (id) => {
+  // TODO: remove any cats that have this owner id
+  const [rows] = await promisePool.execute(
+    'DELETE FROM wsk_Users WHERE user_id = ?',
+    [id]
+  );
+  console.log('rows', rows);
+  if (rows.affectedRows === 0) {
+    return false;
+  }
+  return {message: 'success'};
+};
+
+export {listAllUsers, findUserById, addUser, removeUser, modifyUser};
