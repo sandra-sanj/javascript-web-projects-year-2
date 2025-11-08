@@ -21,7 +21,7 @@ INSERT INTO `wsk_cats` (`cat_id`, `cat_name`, `weight`, `owner`, `filename`, `bi
 CREATE TABLE `wsk_users` (
   `user_id` int(11) NOT NULL,
   `name` text NOT NULL,
-  `username` text NOT NULL,
+  `username` text NOT NULL UNIQUE,
   `email` text NOT NULL,
   `password` text NOT NULL,
   `role` text NOT NULL DEFAULT 'user'
