@@ -1,77 +1,26 @@
-import {restaurantRow, restaurantModal} from './components.js';
 import {
-  baseUrl,
-  lang,
+  restaurantRow,
+  restaurantModal,
+  restaurantDailyMenuModal,
+  restaurantWeeklyMenuModal,
+} from './components.js';
+import {
   highlightClass,
   closestRestaurantClass,
+  defaultCoordinates,
 } from './variables.js';
-import {fetchData} from './utils.js';
+import {getRestaurants, getDailyMenu, getWeeklyMenu} from './api.js';
 
 let filteredRestaurants = [];
-
-// api requests
-const getRestaurants = async () => {
-  try {
-    const api = '/api/v1/restaurants';
-    const url = baseUrl + api;
-
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const response = await fetchData(url, options);
-    console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    console.log('fetch data', data);
-
-    return [...data]; // return restaurants (data) as list
-  } catch (error) {
-    console.error('An error occurred:', error);
-    return [];
-  }
-};
-
-const getDailyMenu = async (restaurant) => {
-  try {
-    console.log('id', restaurant._id);
-    const api = `/api/v1/restaurants/daily/${restaurant._id}/${lang}`;
-    const url = baseUrl + api;
-
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const response = await fetch(url, options);
-    console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    console.log('fetch data', data);
-    return data;
-  } catch (error) {
-    console.error('An error occurred:', error);
-  }
-};
+let selectedRestaurant;
 
 // map
-const defaultCoordinates = {
-  latitude: 60.22366,
-  longitude: 25.07946,
-};
 let selfCoordinates;
 //let sortedRestaurants;
 
 // get location
 const locationElement = document.getElementById('location');
-const table = document.querySelector('table');
+//const table = document.querySelector('table');
 let map;
 const restaurantMarkers = L.layerGroup();
 
@@ -205,14 +154,33 @@ const removeClassFromElement = (element, className) => {
 const modal = document.getElementById('modal');
 
 // render elements in ui
-const renderModalContent = async (restaurant) => {
-  console.log('rendering restaurant in modal', restaurant);
+const renderModalContent = async (restaurant, menuType) => {
+  console.log('menu type id', menuType);
+  console.log(restaurant);
 
-  const dailyMenu = await getDailyMenu(restaurant);
-  console.log('dailyMenu', dailyMenu);
+  // remove divs from modal
+  const modalDivs = modal.querySelectorAll('div');
+  modalDivs.forEach((div) => div.remove());
 
-  modal.innerHTML = ''; // empty modal contents
-  modal.appendChild(restaurantModal(restaurant, dailyMenu));
+  let modalContent;
+
+  // get menu or info based on menuType
+  if (!menuType || menuType === 'daily-menu') {
+    const dailyMenu = await getDailyMenu(restaurant);
+    modalContent = restaurantDailyMenuModal(dailyMenu);
+  } else if (menuType === 'weekly-menu') {
+    const weeklyMenu = await getWeeklyMenu(restaurant);
+    modalContent = restaurantWeeklyMenuModal(weeklyMenu);
+  } else if (menuType === 'contact-info') {
+    //const contactInfo = await getContactInfo();
+    //console.log('contactInfo', contactInfo);
+    modalContent = restaurantModal(restaurant);
+  }
+  //const dailyMenu = await getDailyMenu(restaurant);
+  //console.log('dailyMenu', dailyMenu);
+  console.log('modal content', modalContent);
+
+  modal.appendChild(modalContent);
   modal.showModal(); // open modal
 };
 
@@ -245,12 +213,14 @@ const renderUI = (restaurants) => {
 
       // add event to table row
       row.addEventListener('click', () => {
+        selectedRestaurant = restaurant;
+
         // if element does not have class, remove class from other elements and add to the element
         // if element has class, remove it
         if (!row.classList.contains(highlightClass)) {
           removeClassFromAllElements(highlightClass);
           addClassToElement(row, highlightClass);
-          renderModalContent(restaurant);
+          renderModalContent(restaurant, false);
         } else {
           removeClassFromElement(row, highlightClass);
         }
@@ -327,14 +297,31 @@ modal.addEventListener('click', (event) => {
   }
 });
 
-sodexoCheckbox.addEventListener('click', (event) => {
+// filtering events
+sodexoCheckbox.addEventListener('click', () => {
   filterRestaurants(alphapheticalRestaurants);
   renderUI(filteredRestaurants);
   renderMapMarkers(filteredRestaurants);
 });
 
-compassCheckbox.addEventListener('click', (event) => {
+compassCheckbox.addEventListener('click', () => {
   filterRestaurants(alphapheticalRestaurants);
   renderUI(filteredRestaurants);
   renderMapMarkers(filteredRestaurants);
+});
+
+// modal menu events
+document.getElementById('daily-menu').addEventListener('click', (event) => {
+  console.log('clicked daily menu');
+  renderModalContent(selectedRestaurant, event.target.id);
+});
+
+document.getElementById('weekly-menu').addEventListener('click', (event) => {
+  console.log('clicked weekly menu');
+  renderModalContent(selectedRestaurant, event.target.id);
+});
+
+document.getElementById('contact-info').addEventListener('click', (event) => {
+  console.log('clicked contact info');
+  renderModalContent(selectedRestaurant, event.target.id);
 });
