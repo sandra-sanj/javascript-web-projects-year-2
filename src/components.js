@@ -14,74 +14,95 @@ const restaurantRow = (restaurant) => {
   return row;
 };
 
-const insertRestaurantInfoDataToModal = (restaurant) => {
-  const {name, address, postalCode, city, phone, company} = restaurant;
+const formFoodCards = (courses) => {
+  const div = document.createElement('div');
 
-  // table rows
-  const info = [
-    {label: 'Address', value: address},
-    {label: 'City & Postal Code', value: `${city}, ${postalCode}`},
-    {label: 'Phone', value: phone},
-    {label: 'Company', value: company},
-  ];
+  courses.forEach((course) => {
+    const foodCard = document.createElement('div');
+    div.appendChild(foodCard);
+    foodCard.classList.add('food-card');
 
-  // restaurant name is used as modal header
-  const header = document.createElement('h2');
-  header.innerHTML = name;
+    const {name, price, diets} = course;
 
-  const table = document.createElement('table');
+    //const row = table.insertRow();
+    const foodAndDietsContainer = document.createElement('div');
 
-  // insert info items to table as rows
-  info.forEach((infoItem) => {
-    const row = table.insertRow();
+    const nameItem = document.createElement('p');
+    nameItem.innerText = name.length > 0 ? name : '-';
 
-    const rowKey = row.insertCell();
-    rowKey.innerText = infoItem.label;
+    const dietsItem = document.createElement('p');
+    let dietText;
+    if (Array.isArray(diets)) {
+      dietText = diets.length > 0 ? diets.join(', ') : '-';
+    } else {
+      dietText = diets && diets.length > 0 ? diets : '-';
+    }
+    dietsItem.innerText = dietText;
 
-    const rowValue = row.insertCell();
-    rowValue.innerText = infoItem.value ?? '-';
+    const priceContainer = document.createElement('div');
+
+    if (price.length > 0) {
+      price.split('/').map((item) => {
+        const p = document.createElement('p');
+        p.innerText = item.trim();
+        priceContainer.appendChild(p);
+      });
+    } else {
+      const p = document.createElement('p');
+      p.innerText = '-';
+      priceContainer.appendChild(p);
+    }
+
+    foodAndDietsContainer.appendChild(nameItem);
+    foodAndDietsContainer.appendChild(dietsItem);
+
+    foodCard.appendChild(foodAndDietsContainer);
+    foodCard.appendChild(priceContainer);
   });
 
-  const div = document.createElement('div');
-  div.appendChild(header);
-  div.appendChild(table);
-  console.log(div);
   return div;
 };
 
 const insertRestaurantDailyMenuToModal = (menu) => {
   const {courses} = menu;
 
-  const header = document.createElement('h3');
-  header.innerHTML = 'Daily Menu';
+  if (courses.length > 0) {
+    const div = document.createElement('div');
+    div.appendChild(formFoodCards(courses));
+    return div;
+  } else {
+    const p = document.createElement('p');
+    p.innerText = 'Not available';
+    return p;
+  }
+};
+
+const insertRestaurantWeeklyMenuToModal = (menu) => {
+  const {days} = menu;
+  console.log(days);
 
   const div = document.createElement('div');
-  div.appendChild(header);
 
-  if (courses.length > 0) {
-    const table = document.createElement('table');
-    div.appendChild(table);
+  // create buttons for weekdays
+  const ol = document.createElement('ol');
+  const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  weekdays.forEach((day) => {
+    const li = document.createElement('li');
+    li.innerText = day;
+    ol.appendChild(li);
+  });
+  div.appendChild(ol);
 
-    const headerRow = table.insertRow();
-    headerRow.insertCell().innerText = 'Course';
-    headerRow.insertCell().innerText = 'Price';
-    headerRow.insertCell().innerText = 'Diets';
+  // create daily menu cards
+  if (days.length > 0) {
+    days.forEach((day) => {
+      console.log(day);
 
-    // insert rows and cells to table containing name, price, diets
-    courses.forEach((course) => {
-      const {name, price, diets} = course;
+      const p = document.createElement('p');
+      p.innerHTML = day.date;
+      div.appendChild(p);
 
-      const row = table.insertRow();
-      row.insertCell().innerText = name.length > 0 ? name : '-';
-      row.insertCell().innerText = price.length > 0 ? price : '-';
-
-      let dietText;
-      if (Array.isArray(diets)) {
-        dietText = diets.length > 0 ? diets.join(', ') : '-';
-      } else {
-        dietText = diets && diets.length > 0 ? diets : '-';
-      }
-      row.insertCell().innerText = dietText;
+      div.appendChild(formFoodCards(day.courses));
     });
   } else {
     const p = document.createElement('p');
@@ -91,15 +112,25 @@ const insertRestaurantDailyMenuToModal = (menu) => {
   return div;
 };
 
-const restaurantModal = (restaurant, menu) => {
-  const infoContent = insertRestaurantInfoDataToModal(restaurant);
-  const menuContent = insertRestaurantDailyMenuToModal(menu);
-
+const restaurantModal = (modalContent) => {
   const modalDiv = document.createElement('div');
-  modalDiv.appendChild(infoContent);
-  modalDiv.appendChild(menuContent);
-
+  modalDiv.appendChild(modalContent);
   return modalDiv;
 };
 
-export {restaurantRow, restaurantModal};
+const restaurantDailyMenuModal = (menu) => {
+  const menuContent = insertRestaurantDailyMenuToModal(menu);
+  return restaurantModal(menuContent);
+};
+
+const restaurantWeeklyMenuModal = (menu) => {
+  const menuContent = insertRestaurantWeeklyMenuToModal(menu);
+  return restaurantModal(menuContent);
+};
+
+export {
+  restaurantRow,
+  restaurantModal,
+  restaurantDailyMenuModal,
+  restaurantWeeklyMenuModal,
+};
