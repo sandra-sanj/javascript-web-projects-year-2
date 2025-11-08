@@ -57,14 +57,68 @@ td {
   padding: 20px 40px;
 }
 
-#modal div {
+#modal > div {
   display: flex;
   flex-direction: column;
-
   gap: 40px;
 }
 
 #map {
-  height: 300px;
+  min-height: 400px;
+  max-height: 600px;
+  width: 80%;
   background-color: antiquewhite;
+}
+
+/* modal navigation */
+#modal ol {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 40px;
+}
+
+#modal ol li {
+  float: left;
+}
+
+#modal ol li {
+  display: block;
+  background-color: #9a9393;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+#modal ol li:hover {
+  background-color: #111111;
+  cursor: pointer;
+}
+
+/* food cards */
+.food-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: #8aae87;
+  border-radius: 20px;
+
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  color: rgb(15, 33, 20);
+}
+
+.food-card > div {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  flex: 1;
+}
+
+.food-card div p {
+  margin: 5px;
 }
