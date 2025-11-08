@@ -16,11 +16,9 @@ let selectedRestaurant;
 
 // map
 let selfCoordinates;
-//let sortedRestaurants;
 
 // get location
 const locationElement = document.getElementById('location');
-//const table = document.querySelector('table');
 let map;
 const restaurantMarkers = L.layerGroup();
 
@@ -176,9 +174,6 @@ const renderModalContent = async (restaurant, menuType) => {
     //console.log('contactInfo', contactInfo);
     modalContent = restaurantModal(restaurant);
   }
-  //const dailyMenu = await getDailyMenu(restaurant);
-  //console.log('dailyMenu', dailyMenu);
-  console.log('modal content', modalContent);
 
   modal.appendChild(modalContent);
   modal.showModal(); // open modal
