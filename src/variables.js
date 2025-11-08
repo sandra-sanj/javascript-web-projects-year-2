@@ -6,4 +6,15 @@ const lang = 'en';
 const highlightClass = 'highlight';
 const closestRestaurantClass = 'closest';
 
-export {baseUrl, lang, highlightClass, closestRestaurantClass};
+const defaultCoordinates = {
+  latitude: 60.22366,
+  longitude: 25.07946,
+};
+
+export {
+  baseUrl,
+  lang,
+  highlightClass,
+  closestRestaurantClass,
+  defaultCoordinates,
+};
