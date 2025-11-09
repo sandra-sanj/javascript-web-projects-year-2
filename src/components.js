@@ -1,5 +1,5 @@
 const restaurantRow = (restaurant) => {
-  const {name, address} = restaurant;
+  const {name, address, distance} = restaurant;
 
   const tdName = document.createElement('td');
   tdName.innerHTML = name;
@@ -7,9 +7,13 @@ const restaurantRow = (restaurant) => {
   const tdAddress = document.createElement('td');
   tdAddress.innerHTML = address;
 
+  const tdDistance = document.createElement('td');
+  tdDistance.innerHTML = `~&nbsp;${distance.toFixed(1)}km`;
+
   const row = document.createElement('tr');
   row.appendChild(tdName);
   row.appendChild(tdAddress);
+  row.appendChild(tdDistance);
 
   return row;
 };
@@ -63,13 +67,11 @@ const formFoodCards = (courses) => {
   return div;
 };
 
-const insertRestaurantDailyMenuToModal = (menu) => {
+const restaurantDailyMenuModal = (menu) => {
   const {courses} = menu;
 
   if (courses.length > 0) {
-    const div = document.createElement('div');
-    div.appendChild(formFoodCards(courses));
-    return div;
+    return formFoodCards(courses);
   } else {
     const p = document.createElement('p');
     p.innerText = 'Not available';
@@ -77,15 +79,24 @@ const insertRestaurantDailyMenuToModal = (menu) => {
   }
 };
 
-const insertRestaurantWeeklyMenuToModal = (menu) => {
+const restaurantWeeklyMenuModal = (menu) => {
   const {days} = menu;
-  console.log(days);
+  //console.log(days);
 
   const div = document.createElement('div');
 
   // create buttons for weekdays
   const ol = document.createElement('ol');
-  const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const weekdays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+
   weekdays.forEach((day) => {
     const li = document.createElement('li');
     li.innerText = day;
@@ -112,25 +123,36 @@ const insertRestaurantWeeklyMenuToModal = (menu) => {
   return div;
 };
 
-const restaurantModal = (modalContent) => {
-  const modalDiv = document.createElement('div');
-  modalDiv.appendChild(modalContent);
-  return modalDiv;
-};
+const restaurantContactInfoModal = (restaurant) => {
+  const {name, address, postalCode, city, phone, company} = restaurant;
 
-const restaurantDailyMenuModal = (menu) => {
-  const menuContent = insertRestaurantDailyMenuToModal(menu);
-  return restaurantModal(menuContent);
-};
+  // table rows
+  const info = [
+    {label: 'Address', value: address},
+    {label: 'City & Postal Code', value: `${postalCode}, ${city}`},
+    {label: 'Phone', value: phone},
+    {label: 'Company', value: company},
+  ];
 
-const restaurantWeeklyMenuModal = (menu) => {
-  const menuContent = insertRestaurantWeeklyMenuToModal(menu);
-  return restaurantModal(menuContent);
+  const div = document.createElement('div');
+
+  // restaurant name is used as modal header
+  const header = document.createElement('h2');
+  header.innerHTML = name;
+  div.appendChild(header);
+
+  info.forEach((infoItem) => {
+    const p = document.createElement('p');
+    p.innerText = infoItem.value ?? '';
+    div.appendChild(p);
+  });
+
+  return div;
 };
 
 export {
   restaurantRow,
-  restaurantModal,
   restaurantDailyMenuModal,
   restaurantWeeklyMenuModal,
+  restaurantContactInfoModal,
 };

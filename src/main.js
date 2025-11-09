@@ -1,12 +1,14 @@
 import {
   restaurantRow,
-  restaurantModal,
   restaurantDailyMenuModal,
   restaurantWeeklyMenuModal,
+  restaurantContactInfoModal,
 } from './components.js';
 import {
   highlightClass,
   closestRestaurantClass,
+  highlightModalMenuClass,
+  notAvailableId,
   defaultCoordinates,
 } from './variables.js';
 import {getRestaurants, getDailyMenu, getWeeklyMenu} from './api.js';
@@ -39,7 +41,7 @@ const addDistanceToRestaurants = (restaurants) => {
   const validRestaurants = restaurants.filter(
     (r) => r?.location?.coordinates?.length == 2
   );
-  console.log('restaurants with valid location data', validRestaurants);
+  //console.log('restaurants with valid location data', validRestaurants);
 
   // map array and add distance variable
   const mappedRestaurants = validRestaurants.map((restaurant) => {
@@ -61,12 +63,28 @@ const renderMapMarkers = (restaurants) => {
   restaurantMarkers.clearLayers();
 
   restaurants.forEach((restaurant) => {
-    const [rLongitude, rLatitude] = restaurant.location.coordinates;
+    const {
+      name,
+      address,
+      postalCode,
+      city,
+      phone,
+      company,
+      location,
+      distance,
+    } = restaurant;
+
+    const [rLongitude, rLatitude] = location.coordinates;
 
     const marker = L.marker([rLatitude, rLongitude]).bindPopup(
-      `<h3>${restaurant.name}</h3><p>${restaurant.address}</p>`
+      `<h3>${name}</h3>
+      <p>${address}</p>
+      <p>${postalCode}, ${city}</p>
+      <p>${phone}</p>
+      <p>${company}</p>
+      <p>~&nbsp;${distance.toFixed(1)}km</p>
+      `
     );
-
     restaurantMarkers.addLayer(marker);
   });
 
@@ -109,7 +127,7 @@ const locationSuccess = (position) => {
 
   const latitude = position.coords.latitude;
   const longitude = position.coords.longitude;
-  locationElement.innerText = `Location: ${latitude.toFixed(
+  locationElement.innerText = `Coordinates: ${latitude.toFixed(
     5
   )}, ${longitude.toFixed(5)}`;
   continueAfterLocation();
@@ -131,8 +149,8 @@ const getLocation = () => {
 };
 
 // class
-const removeClassFromAllElements = (className) => {
-  const elements = document.querySelectorAll('tr');
+const removeClassFromAllElements = (className, elementType) => {
+  const elements = document.querySelectorAll(elementType);
   elements.forEach((element) => {
     if (element.classList.contains(className)) {
       element.classList.remove(className);
@@ -148,17 +166,25 @@ const removeClassFromElement = (element, className) => {
   element.classList.remove(className);
 };
 
+const hideElement = (element) => {
+  element.style.display = 'none';
+};
+
+const showElement = (element) => {
+  element.style.display = '';
+};
+
 // modal
 const modal = document.getElementById('modal');
 
 // render elements in ui
 const renderModalContent = async (restaurant, menuType) => {
-  console.log('menu type id', menuType);
-  console.log(restaurant);
-
-  // remove divs from modal
-  const modalDivs = modal.querySelectorAll('div');
-  modalDivs.forEach((div) => div.remove());
+  // remove all elements (not "ol") from modal
+  for (let element of modal.children) {
+    if (element.tagName.toLowerCase() !== 'ol') {
+      modal.removeChild(element);
+    }
+  }
 
   let modalContent;
 
@@ -170,9 +196,7 @@ const renderModalContent = async (restaurant, menuType) => {
     const weeklyMenu = await getWeeklyMenu(restaurant);
     modalContent = restaurantWeeklyMenuModal(weeklyMenu);
   } else if (menuType === 'contact-info') {
-    //const contactInfo = await getContactInfo();
-    //console.log('contactInfo', contactInfo);
-    modalContent = restaurantModal(restaurant);
+    modalContent = restaurantContactInfoModal(restaurant);
   }
 
   modal.appendChild(modalContent);
@@ -184,23 +208,20 @@ const compassCheckbox = document.getElementById('show-compass');
 
 const renderUI = (restaurants) => {
   const restaurantsTable = document.querySelector('#restaurants tbody');
-  restaurantsTable.innerHTML = ''; // empty table
 
-  const headerName = document.createElement('th');
-  headerName.innerText = 'Name';
-  const headerAddress = document.createElement('th');
-  headerAddress.innerText = 'Address';
+  // delete last row of table while there is more than one row
+  while (restaurantsTable.rows.length > 1) {
+    restaurantsTable.deleteRow(1);
+  }
 
-  const headerRow = document.createElement('tr');
-  headerRow.appendChild(headerName);
-  headerRow.appendChild(headerAddress);
-
-  restaurantsTable.appendChild(headerRow);
+  // remove old "Not Available" p element
+  const oldTableMessage = document.getElementById(notAvailableId);
+  oldTableMessage ? oldTableMessage.remove() : false;
 
   // get restaurant with least distance and mark its row with special color
   const closestRestaurant = getClosestRestaurant(restaurants);
-  console.log('closestRestaurant', closestRestaurant);
-  removeClassFromAllElements(closestRestaurantClass);
+  //console.log('closestRestaurant', closestRestaurant);
+  removeClassFromAllElements(closestRestaurantClass, 'tr');
 
   if (restaurants.length > 0) {
     restaurants.forEach((restaurant) => {
@@ -213,8 +234,14 @@ const renderUI = (restaurants) => {
         // if element does not have class, remove class from other elements and add to the element
         // if element has class, remove it
         if (!row.classList.contains(highlightClass)) {
-          removeClassFromAllElements(highlightClass);
+          removeClassFromAllElements(highlightClass, 'tr');
           addClassToElement(row, highlightClass);
+
+          // modal
+          addClassToElement(
+            document.getElementById('daily-menu'),
+            highlightModalMenuClass
+          );
           renderModalContent(restaurant, false);
         } else {
           removeClassFromElement(row, highlightClass);
@@ -227,24 +254,27 @@ const renderUI = (restaurants) => {
         addClassToElement(row, closestRestaurantClass);
       }
     });
+    showElement(restaurantsTable);
   } else {
+    //
+    hideElement(restaurantsTable);
+
     // display message in UI if no restaurants available
     const p = document.createElement('p');
     p.innerText = 'Data not available';
-
-    restaurantsTable.innerHTML = ''; // empty table
-    restaurantsTable.appendChild(p);
+    p.id = notAvailableId;
+    document.querySelector('body').appendChild(p);
   }
 };
 
 const filterRestaurants = (unfilteredRestaurants) => {
   // add filter to filter out restaurants
   function checkRestaurantCompany(restaurant) {
-    if (restaurant.company == 'Sodexo' && sodexoCheckbox.checked) {
+    if (restaurant.company == 'Sodexo' && sodexoCheckbox?.checked) {
       return true;
     } else if (
       restaurant.company == 'Compass Group' &&
-      compassCheckbox.checked
+      compassCheckbox?.checked
     ) {
       return true;
     }
@@ -288,18 +318,19 @@ getLocation();
 modal.addEventListener('click', (event) => {
   if (event.target === modal) {
     modal.close();
-    removeClassFromAllElements(highlightClass);
+    removeClassFromAllElements(highlightClass, 'tr');
+    removeClassFromAllElements(highlightModalMenuClass, 'li');
   }
 });
 
 // filtering events
-sodexoCheckbox.addEventListener('click', () => {
+sodexoCheckbox?.addEventListener('click', () => {
   filterRestaurants(alphapheticalRestaurants);
   renderUI(filteredRestaurants);
   renderMapMarkers(filteredRestaurants);
 });
 
-compassCheckbox.addEventListener('click', () => {
+compassCheckbox?.addEventListener('click', () => {
   filterRestaurants(alphapheticalRestaurants);
   renderUI(filteredRestaurants);
   renderMapMarkers(filteredRestaurants);
@@ -307,16 +338,55 @@ compassCheckbox.addEventListener('click', () => {
 
 // modal menu events
 document.getElementById('daily-menu').addEventListener('click', (event) => {
-  console.log('clicked daily menu');
+  removeClassFromAllElements(highlightModalMenuClass, 'li');
+  addClassToElement(event.target, highlightModalMenuClass);
+
   renderModalContent(selectedRestaurant, event.target.id);
 });
 
 document.getElementById('weekly-menu').addEventListener('click', (event) => {
-  console.log('clicked weekly menu');
+  removeClassFromAllElements(highlightModalMenuClass, 'li');
+  addClassToElement(event.target, highlightModalMenuClass);
+
   renderModalContent(selectedRestaurant, event.target.id);
 });
 
 document.getElementById('contact-info').addEventListener('click', (event) => {
-  console.log('clicked contact info');
+  removeClassFromAllElements(highlightModalMenuClass, 'li');
+  addClassToElement(event.target, highlightModalMenuClass);
+
   renderModalContent(selectedRestaurant, event.target.id);
+});
+
+document.getElementById('close-modal').addEventListener('click', () => {
+  modal.close();
+  removeClassFromAllElements(highlightModalMenuClass, 'li');
+  removeClassFromAllElements(highlightClass, 'tr');
+});
+
+// render filter options (city, company, distance) to UI
+const renderFilterOptions = () => {};
+
+// filter
+document.getElementById('filter-options').addEventListener('click', (event) => {
+  event.target.classList.toggle('active');
+
+  const content = event.target.nextElementSibling;
+  if (content.style.display === 'block') {
+    content.style.display = 'none';
+  } else {
+    content.style.display = 'block';
+  }
+  //renderFilterOptions();
+});
+
+document.getElementById('active-filters').addEventListener('click', (event) => {
+  event.target.classList.toggle('active');
+
+  const content = event.target.nextElementSibling;
+  if (content.style.display === 'flex') {
+    content.style.display = 'none';
+  } else {
+    content.style.display = 'flex';
+  }
 });

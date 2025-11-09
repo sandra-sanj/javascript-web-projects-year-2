@@ -5,6 +5,8 @@ const lang = 'en';
 
 const highlightClass = 'highlight';
 const closestRestaurantClass = 'closest';
+const highlightModalMenuClass = 'hightlight-modal-menu';
+const notAvailableId = 'not-available';
 
 const defaultCoordinates = {
   latitude: 60.22366,
@@ -16,5 +18,7 @@ export {
   lang,
   highlightClass,
   closestRestaurantClass,
+  highlightModalMenuClass,
+  notAvailableId,
   defaultCoordinates,
 };

@@ -24,18 +24,137 @@
     <!-- location and map -->
     <div id="map"></div>
     <div id="location"></div>
-    <!-- filter restaurants based on company -->
+    <!-- filters -->
     <div>
-      <p>Display restaurants:</p>
-      <input type="checkbox" id="show-sodexo" name="filter1" checked />
-      <label for="show-sodexo">Sodexo</label>
-      <input type="checkbox" id="show-compass" name="filter2" checked />
-      <label for="show-compass">Compass Group</label>
+      <p id="filter-options">Select Filters</p>
+      <div class="filter-content collapsible-content">
+        <div class="filter-headers">
+          <ol>
+            <li>City</li>
+            <li>Company</li>
+            <li>Distance</li>
+          </ol>
+        </div>
+        <div class="filters">
+          <div id="city-filter">
+            <ol>
+              <li>city 1</li>
+              <li>city 2</li>
+              <li>city 3</li>
+            </ol>
+          </div>
+          <div id="company-filter">
+            <ol>
+              <li>
+                <input
+                  type="checkbox"
+                  id="show-sodexo"
+                  name="filter1"
+                  checked
+                />
+                <label for="show-sodexo">Sodexo</label>
+              </li>
+              <li>
+                <input
+                  type="checkbox"
+                  id="show-compass"
+                  name="filter2"
+                  checked
+                />
+                <label for="show-compass">Compass Group</label>
+              </li>
+            </ol>
+          </div>
+          <div id="distance-filter">
+            <ol>
+              <li>distance 1</li>
+              <li>distance 2</li>
+              <li>distance 3</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <p id="active-filters">Active Filters</p>
+      <div class="contact-chips collapsible-content">
+        <div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+          <div class="chip">
+            option<span
+              class="closebtn"
+              onclick="this.parentElement.style.display='none'"
+              >&times;</span
+            >
+          </div>
+        </div>
+      </div>
     </div>
     <table id="restaurants">
       <tr>
         <th>Name</th>
         <th>Address</th>
+        <th>Distance</th>
       </tr>
       <!-- add restaurants here -->
     </table>
@@ -46,6 +165,7 @@
         <li id="daily-menu">Daily Menu</li>
         <li id="weekly-menu">Weekly Menu</li>
         <li id="contact-info">Contact Info</li>
+        <li id="close-modal">X</li>
       </ol>
     </dialog>
   </body>

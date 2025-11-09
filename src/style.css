@@ -1,15 +1,17 @@
 body {
-  background-color: #f0f0f0;
+  background-color: #bdcdb7;
   font-family: sans-serif;
   margin: 10%;
   padding: 0;
 }
 
+/* table */
 table {
   border-collapse: collapse;
   border-spacing: 0;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
 tr:nth-child(odd) {
@@ -22,6 +24,10 @@ tr:nth-child(even) {
 
 #restaurants tr {
   cursor: pointer;
+}
+
+#restaurants tr:hover {
+  background-color: #b7c9b5;
 }
 
 th {
@@ -38,11 +44,7 @@ td {
 }
 
 .highlight {
-  background-color: rgb(
-    179,
-    183,
-    224
-  ) !important; /* force color instead of table default background color */
+  background-color: #8aae87 !important; /* force color instead of table default background color */
   font-weight: 800;
 }
 
@@ -53,20 +55,14 @@ td {
 #modal {
   width: 80%;
   height: 60%;
-
-  padding: 20px 40px;
-}
-
-#modal > div {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
+  /*padding: 20px 40px;*/
+  padding: 0;
 }
 
 #map {
   min-height: 400px;
   max-height: 600px;
-  width: 80%;
+  width: 100%;
   background-color: antiquewhite;
 }
 
@@ -77,6 +73,8 @@ td {
   padding: 0;
   overflow: hidden;
   height: 40px;
+  width: 100%;
+  display: flex;
 }
 
 #modal ol li {
@@ -85,24 +83,40 @@ td {
 
 #modal ol li {
   display: block;
-  background-color: #9a9393;
+  background-color: rgb(192, 161, 135);
   color: white;
   text-align: center;
-  padding: 14px 16px;
+
+  padding: 8px 16px;
   text-decoration: none;
+  flex: 1;
 }
 
 #modal ol li:hover {
-  background-color: #111111;
+  background-color: rgb(127, 111, 98);
   cursor: pointer;
 }
 
+.hightlight-modal-menu {
+  background-color: #8aae87 !important; /* force color instead of table default background color */
+  font-weight: 800;
+}
+
 /* food cards */
+/* div that has food cards */
+div:has(> .food-card) {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px;
+}
+
 .food-card {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
 
   background-color: #8aae87;
   border-radius: 20px;
@@ -110,15 +124,111 @@ td {
   padding: 14px 16px;
   margin-bottom: 10px;
   color: rgb(15, 33, 20);
+
+  flex: 0 1 calc(50% - 10px); /* two cards per row on big display */
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-.food-card > div {
+/* responsive food card width on smaller display size */
+@media (max-width: 768px) {
+  .food-card {
+    flex: 1 1 100%; /* one card per row on small display */
+  }
+}
+
+/* inside food card */
+.food-card div {
   display: flex;
   flex-direction: column;
   margin: 10px;
   flex: 1;
 }
 
+.food-card div:first-child {
+  flex: 2; /* bigger */
+}
+
+.food-card > div:last-child {
+  flex: 1; /* smaller */
+}
+
 .food-card div p {
   margin: 5px;
 }
+
+/* filter */
+
+/* collapsible filter options */
+#filter-options > div {
+  width: 100%;
+}
+
+#filter-options,
+#active-filters {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+
+  padding: 18px;
+  width: 100%;
+  border: none;
+  margin-top: 0;
+  margin-bottom: 0;
+
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active,
+#filter-options:hover,
+#active-filters:hover {
+  background-color: #555;
+}
+
+.collapsible-content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #b4a2a2;
+  width: 100%;
+}
+
+#filter-options,
+#active-filters,
+.collapsible-content {
+  box-sizing: border-box;
+}
+
+/* contact chips */
+.contact-chips div {
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 5px;
+  flex: 1;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0 20px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 15px;
+  background-color: #f1f1f1;
+}
+
+.closebtn {
+  padding-left: 10px;
+  color: #888;
+  font-weight: bold;
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.closebtn:hover {
+  color: #000;
+}
+
+/* filters */
