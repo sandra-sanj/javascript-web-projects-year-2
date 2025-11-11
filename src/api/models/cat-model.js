@@ -4,9 +4,7 @@ import promisePool from '../../utils/database.js';
 
 const listAllCats = async () => {
   const result = await promisePool.query('SELECT * FROM wsk_cats');
-  //console.log('result', result);
   const rows = result[0];
-
   return rows;
 };
 
