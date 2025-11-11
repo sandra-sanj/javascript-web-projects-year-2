@@ -49,7 +49,6 @@ const modifyUser = async (user, id) => {
 };
 
 const removeUser = async (id) => {
-  // TODO: remove any cats that have this owner id
   const [rows] = await promisePool.execute(
     'DELETE FROM wsk_Users WHERE user_id = ?',
     [id]
