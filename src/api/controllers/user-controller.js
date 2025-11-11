@@ -6,6 +6,7 @@ import {
   modifyUser,
   getUserByUsername,
 } from '../models/user-model.js';
+import {removeCat, listCatsByUserId} from '../models/cat-model.js';
 import bcrypt from 'bcrypt';
 
 const hashFormatPassword = async (password) => {
@@ -112,6 +113,12 @@ const deleteUser = async (req, res) => {
   const valid = await verifyUserAccess(user, res.locals.user.user_id);
   if (!valid.ok) {
     return res.status(valid.status).json({message: valid.message});
+  }
+
+  // get user's cats and delete them
+  const cats = await listCatsByUserId(res.locals.user.user_id);
+  for (const cat of cats) {
+    await removeCat(cat.cat_id);
   }
 
   const result = await removeUser(user.user_id);
