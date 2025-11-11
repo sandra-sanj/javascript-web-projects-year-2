@@ -84,13 +84,12 @@ const getCatsByUserId = async (req, res) => {
 };
 
 const getMyCats = async (req, res) => {
-  console.log('user_id', res.locals.user.user_id);
   const cats = await listCatsByUserId(res.locals.user.user_id);
   res.json(cats);
 };
 
 // test if user is admin or is owner of cat
-const isCatOwnerOrAdmin = async (req, res) => {};
+//const isCatOwnerOrAdmin = async (req, res) => {};
 
 export {
   getCats,
