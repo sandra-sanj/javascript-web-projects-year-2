@@ -45,11 +45,15 @@ const putCat = async (req, res) => {
     return res.status(401).json({message: 'Cat not found'});
   }
 
-  // check if cat owner and user match
-  if (cat.owner !== res.locals.user.user_id) {
+  // check if cat owner and user match or if user is admin
+  if (
+    cat.owner !== res.locals.user.user_id &&
+    res.locals.user.role !== 'admin'
+  ) {
     return res.status(403).json({message: 'User cannot modify this cat'});
   }
 
+  // modify user cat
   const result = await modifyCat(req.body, cat.cat_id);
   if (result) {
     res.status(201).json({message: 'Cat updated', result});
@@ -66,7 +70,10 @@ const deleteCat = async (req, res) => {
   }
 
   // check if cat owner and user match
-  if (cat.owner !== res.locals.user.user_id) {
+  if (
+    cat.owner !== res.locals.user.user_id &&
+    res.locals.user.role !== 'admin'
+  ) {
     return res.status(403).json({message: 'User cannot delete this cat'});
   }
 

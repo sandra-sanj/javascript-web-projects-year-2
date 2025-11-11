@@ -14,22 +14,36 @@ const hashFormatPassword = async (password) => {
 };
 
 // check if user id and user id from token match
-const getModifyingPermissions = async (user, logged_in_user_id) => {
-  if (user.user_id !== logged_in_user_id) {
+const getModifyingPermissions = async (
+  user,
+  logged_in_user_id,
+  logged_in_user_role
+) => {
+  if (user.user_id !== logged_in_user_id && logged_in_user_role !== 'admin') {
     return false;
   } else {
     return true;
   }
 };
 
-const verifyUserAccess = async (user, logged_in_user_id) => {
+const verifyUserAccess = async (
+  user,
+  logged_in_user_id,
+  logged_in_user_role
+) => {
   // check user validity
   if (!user) {
     return {ok: false, status: 401, message: 'User not found'};
   }
 
   // check if token (logged in user) can modify user
-  if (!(await getModifyingPermissions(user, logged_in_user_id))) {
+  if (
+    !(await getModifyingPermissions(
+      user,
+      logged_in_user_id,
+      logged_in_user_role
+    ))
+  ) {
     return {ok: false, status: 403, message: 'User cannot modify this user'};
   }
 
@@ -81,17 +95,18 @@ const putUser = async (req, res) => {
   const user = await findUserById(req.params.id);
 
   // check user and token validity
-  const valid = await verifyUserAccess(user, res.locals.user.user_id);
+  const valid = await verifyUserAccess(
+    user,
+    res.locals.user.user_id,
+    res.locals.user.role
+  );
   if (!valid.ok) {
     return res.status(valid.status).json({message: valid.message});
   }
 
   // check if username in use by other user
-  const existingUserByUsername = await getUserByUsername(user.username);
-  if (
-    existingUserByUsername &&
-    existingUserByUsername.user_id !== user.user_id
-  ) {
+  const existingUserByUsername = await getUserByUsername(req.body.username);
+  if (existingUserByUsername?.user_id !== user.user_id) {
     return res.status(403).json({message: 'Username already exists'});
   }
 
@@ -110,7 +125,11 @@ const putUser = async (req, res) => {
 const deleteUser = async (req, res) => {
   const user = await findUserById(req.params.id);
 
-  const valid = await verifyUserAccess(user, res.locals.user.user_id);
+  const valid = await verifyUserAccess(
+    user,
+    res.locals.user.user_id,
+    res.locals.user.role
+  );
   if (!valid.ok) {
     return res.status(valid.status).json({message: valid.message});
   }
