@@ -10,7 +10,7 @@ import {removeCat, listCatsByUserId} from '../models/cat-model.js';
 import bcrypt from 'bcrypt';
 
 const hashFormatPassword = async (password) => {
-  return bcrypt.hash(password, 10); //bcrypt.hashSync(password, 10);
+  return await bcrypt.hash(password, 10); //bcrypt.hashSync(password, 10);
 };
 
 // check if user id and user id from token match
