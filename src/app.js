@@ -1,7 +1,10 @@
 import express from 'express';
 import api from './api/index.js';
+import cors from 'cors';
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.static('public'));
 app.use(express.json()); // parse json data from http request
