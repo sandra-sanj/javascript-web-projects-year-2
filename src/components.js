@@ -103,6 +103,7 @@ const restaurantWeeklyMenuModal = (menu) => {
     ol.appendChild(li);
   });
   div.appendChild(ol);
+  ol.classList.add('modal-weekday-tabs');
 
   // create daily menu cards
   if (days.length > 0) {
