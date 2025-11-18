@@ -45,7 +45,7 @@ const formFoodCards = (courses) => {
 
     const priceContainer = document.createElement('div');
 
-    if (price.length > 0) {
+    if (price?.length > 0) {
       price.split('/').map((item) => {
         const p = document.createElement('p');
         p.innerText = item.trim();
