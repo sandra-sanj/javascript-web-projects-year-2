@@ -1,6 +1,7 @@
 body {
-  background-color: #bdcdb7;
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  background-color: rgb(255, 240, 221);
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -17,14 +18,18 @@ table {
   margin: 0;
   padding: 0;
   width: 100%;
+
+  border-style: solid;
+  border-color: rgb(119, 136, 115);
+  border-width: 1.5px;
 }
 
 tr:nth-child(odd) {
-  background-color: rgb(245, 245, 245);
+  background-color: rgb(224, 237, 244);
 }
 
 tr:nth-child(even) {
-  background-color: rgb(232, 232, 232);
+  background-color: rgb(197, 224, 233);
 }
 
 #restaurants tr {
@@ -32,11 +37,11 @@ tr:nth-child(even) {
 }
 
 #restaurants tr:hover {
-  background-color: #b7c9b5;
+  background-color: rgb(161, 188, 152) !important;
 }
 
 th {
-  background-color: rgba(0, 139, 139, 0.615);
+  background-color: rgb(119, 136, 115);
   color: white;
   border-bottom: 1px solid #ccc;
   font-weight: normal;
@@ -49,12 +54,16 @@ td {
 }
 
 .highlight {
-  background-color: #8aae87 !important; /* force color instead of table default background color */
+  background-color: rgb(
+    139,
+    174,
+    102
+  ) !important; /* force color instead of table default background color */
   font-weight: 800;
 }
 
 .closest {
-  background-color: rgb(135, 138, 169) !important;
+  background-color: rgb(134, 176, 189) !important;
 }
 
 #modal {
@@ -68,11 +77,11 @@ td {
   min-height: 400px;
   max-height: 600px;
   width: 100%;
-  background-color: antiquewhite;
+  background-color: rgb(241, 243, 224);
 
   border-radius: 10px;
   border-style: solid;
-  border-color: #5a6a59;
+  border-color: rgb(119, 136, 115);
   border-width: 2px;
 }
 
@@ -87,10 +96,12 @@ td {
   height: 40px;
   width: 100%;
   display: flex;
-  /*font-size: 20px;*/
 }
 
-#navigation-bar {
+.navigation-bar {
+  font-size: 20px;
+  height: 50px;
+
   position: fixed;
   top: 0;
   z-index: 1000; /* place nav bar on top of leaflet*/
@@ -113,7 +124,7 @@ td {
   justify-content: center;
   align-items: center;
 
-  background-color: rgb(192, 161, 135);
+  background-color: rgb(161, 188, 152);
   color: white;
   text-align: center;
 
@@ -125,12 +136,16 @@ td {
 .navigation-bar li:hover,
 .modal-menu-tabs li:hover,
 .modal-weekday-tabs li:hover {
-  background-color: rgb(136, 162, 132);
+  background-color: rgb(119, 136, 115);
   cursor: pointer;
 }
 
 .hightlight-modal-menu {
-  background-color: #5a7757 !important; /* force color instead of table default background color */
+  background-color: rgb(
+    226,
+    161,
+    111
+  ) !important; /* force color instead of table default background color */
   font-weight: 800;
 }
 
@@ -142,6 +157,7 @@ div:has(> .food-card) {
   flex-wrap: wrap;
   gap: 20px;
   padding: 10px;
+  background-color: rgb(255, 240, 221);
 }
 
 .food-card {
@@ -150,7 +166,7 @@ div:has(> .food-card) {
   justify-content: space-between;
   align-items: stretch;
 
-  background-color: #8aae87;
+  background-color: rgb(226, 161, 111);
   border-radius: 20px;
 
   padding: 14px 16px;
