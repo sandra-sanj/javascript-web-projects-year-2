@@ -124,8 +124,6 @@ td {
   justify-content: center;
   align-items: center;
 
-  background-color: rgb(161, 188, 152);
-  color: white;
   text-align: center;
 
   padding: 8px 16px;
@@ -133,19 +131,28 @@ td {
   flex: 1;
 }
 
+/* main nav bar */
+.navigation-bar li {
+  background-color: rgb(161, 188, 152);
+}
+
+/* modal nav */
+.modal-menu-tabs li,
+.modal-weekday-tabs li {
+  background-color: rgb(161, 188, 152);
+  color: white;
+}
+
+/* nav pointer */
 .navigation-bar li:hover,
 .modal-menu-tabs li:hover,
 .modal-weekday-tabs li:hover {
-  background-color: rgb(119, 136, 115);
+  color: #545454;
   cursor: pointer;
 }
 
 .hightlight-modal-menu {
-  background-color: rgb(
-    226,
-    161,
-    111
-  ) !important; /* force color instead of table default background color */
+  color: #000 !important;
   font-weight: 800;
 }
 
