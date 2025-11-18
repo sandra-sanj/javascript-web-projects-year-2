@@ -9,19 +9,38 @@ import {
   getCatsByUserId,
   getMyCats,
 } from '../controllers/cat-controller.js';
-import {createThumbnail} from '../../middlewares/thumbnail.js';
+import {createThumbnail, upload} from '../../middlewares/upload.js';
 import {authenticateToken} from '../../middlewares/authentication.js';
+import {body} from 'express-validator';
+import {validationErrors} from '../../middlewares/error-handlers.js';
 
 const catRouter = express.Router();
 
-// use multer for post
-const upload = multer({dest: 'uploads/'});
-
-// requests to /api/v1/cats
 catRouter
   .route('/')
   .get(getCats)
-  .post(authenticateToken, upload.single('file'), createThumbnail, postCat);
+  .post(
+    //authenticateToken,
+    upload.single('file'), // file needs to be created first before validations
+    body('cat_name').trim().isLength({min: 3, max: 20}).isAlpha().escape(),
+    body('weight')
+      .trim()
+      .isNumeric()
+      .toFloat()
+      .custom(async (value) => {
+        if (value > 30) {
+          throw new Error('Weight is over 30');
+        }
+      }),
+    body('owner').trim().isInt(),
+    body('birthdate').trim().isDate(),
+    //body('file').trim(),
+    validationErrors,
+    postCat
+  );
+
+// requests to /api/v1/cats
+catRouter.route('/').get(getCats).post(upload.single('file'), postCat);
 
 // requests to /api/vi/user
 catRouter.route('/user').get(authenticateToken, getMyCats); // own cats

@@ -64,9 +64,7 @@ const getUserById = async (req, res) => {
   }
 };
 
-const postUser = async (req, res) => {
-  // log data to console
-
+const postUser = async (req, res, next) => {
   // check if username exists
   if (await getUserByUsername(req.body.username)) {
     return res

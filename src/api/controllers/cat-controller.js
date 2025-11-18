@@ -21,12 +21,23 @@ const getCatById = async (req, res) => {
   }
 };
 
-const postCat = async (req, res) => {
+const postCat = async (req, res, next) => {
+  //console.log(res.locals.user.user_id);
+
+  // check if file is rejected by multer
+  if (!req.file) {
+    const error = new Error('Invalid or missing file!');
+    error.status = 400;
+    next(error);
+  }
+
   const catData = {
     ...req.body,
-    owner: res.locals.user.user_id,
     filename: req.file?.filename,
   };
+  if (res.locals.user) {
+    catData.owner =res.locals.user.user_id;
+  }
 
   const result = await addCat(catData);
 
