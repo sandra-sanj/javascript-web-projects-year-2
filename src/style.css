@@ -1,8 +1,12 @@
 body {
   background-color: #bdcdb7;
   font-family: sans-serif;
-  margin: 10%;
+  margin: 0;
   padding: 0;
+}
+
+.main-container {
+  margin: 10%;
 }
 
 /* table */
@@ -64,6 +68,11 @@ td {
   max-height: 600px;
   width: 100%;
   background-color: antiquewhite;
+
+  border-radius: 10px;
+  border-style: solid;
+  border-color: #5a6a59;
+  border-width: 2px;
 }
 
 /* modal navigation */
@@ -160,7 +169,7 @@ div:has(> .food-card) {
 /* filter */
 
 /* collapsible filter options */
-#filter-options > div {
+#filters-container {
   width: 100%;
 }
 
@@ -232,3 +241,41 @@ div:has(> .food-card) {
 }
 
 /* filters */
+
+/* modal navigation */
+#navigation-bar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 40px;
+  width: 100%;
+  display: flex;
+}
+
+#navigation-bar li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgb(192, 161, 135);
+  color: white;
+  text-align: center;
+
+  padding: 8px 16px;
+  text-decoration: none;
+  flex: 1;
+}
+
+#navigation-bar li:hover {
+  background-color: rgb(127, 111, 98);
+  cursor: pointer;
+}
+
+footer {
+  height: 100px;
+}
+
+#location {
+  margin: 1% 1% 5% 1%;
+}
