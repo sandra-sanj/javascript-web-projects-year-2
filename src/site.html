@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Restaurant</title>
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
@@ -20,12 +20,14 @@
     <script type="module" src="main.js" defer></script>
   </head>
   <body>
-    <ol class="navigation-bar">
-      <li>Restaurants</li>
-      <li>User</li>
-    </ol>
+    <nav>
+      <ol>
+        <li>Restaurants</li>
+        <li id="user-nav">Log In</li>
+      </ol>
+    </nav>
 
-    <div class="main-container">
+    <main>
       <h1>Restaurants</h1>
       <!-- location and map -->
       <div id="map"></div>
@@ -174,7 +176,8 @@
           <li id="close-modal">X</li>
         </ol>
       </dialog>
-    </div>
+    </main>
+
     <footer>
       <div>
         <p>© Restaurant Website</p>
