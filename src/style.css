@@ -6,7 +6,7 @@ body {
   padding: 0;
 }
 
-.main-container {
+main {
   margin: 10%;
   margin-top: 120px;
 }
@@ -86,7 +86,17 @@ td {
 }
 
 /* modal navigation */
-.navigation-bar,
+nav {
+  font-size: 20px;
+  height: 50px;
+  width: 100%;
+
+  position: fixed;
+  top: 0;
+  z-index: 1100; /* place nav bar on top of leaflet*/
+}
+
+nav ol,
 .modal-menu-tabs,
 .modal-weekday-tabs {
   list-style-type: none;
@@ -96,15 +106,6 @@ td {
   height: 40px;
   width: 100%;
   display: flex;
-}
-
-.navigation-bar {
-  font-size: 20px;
-  height: 50px;
-
-  position: fixed;
-  top: 0;
-  z-index: 1100; /* place nav bar on top of leaflet*/
 }
 
 .modal-menu-tabs {
@@ -117,7 +118,7 @@ td {
   top: 40px;
 }
 
-.navigation-bar li,
+nav ol li,
 .modal-menu-tabs li,
 .modal-weekday-tabs li {
   display: flex;
@@ -132,7 +133,7 @@ td {
 }
 
 /* main nav bar */
-.navigation-bar li {
+nav ol li {
   background-color: rgb(161, 188, 152);
 }
 
@@ -144,7 +145,7 @@ td {
 }
 
 /* nav pointer */
-.navigation-bar li:hover,
+nav ol li:hover,
 .modal-menu-tabs li:hover,
 .modal-weekday-tabs li:hover {
   color: #545454;
@@ -291,6 +292,10 @@ div:has(> .food-card) {
 footer {
   height: 200px;
   background-color: rgb(119, 136, 115);
+
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 footer div {
