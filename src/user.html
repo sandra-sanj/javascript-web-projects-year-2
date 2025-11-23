@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <link rel="stylesheet" href="./styles/main.css" />
+    <script type="module" src="user.js" defer></script>
+  </head>
+  <body>
+    <nav>
+      <a href="./site.html">Restaurants</a>
+      <a href="./user.html" id="profile-nav-link">Profile</a>
+      <a href="./user-login.html" id="login-nav-link">Log In</a>
+      <a href="./site.html" id="logout-nav-link">Log Out</a>
+    </nav>
+
+    <main>
+      <h1>User Profile</h1>
+      <div id="user-container">
+        <p>Username:</p>
+        <p id="user-profile-username"></p>
+        <br />
+        <p>Email:</p>
+        <p id="user-profile-email"></p>
+        <br />
+        <img
+          src="https://placehold.co/150x150"
+          alt="profile picture"
+          id="user-profile-picture"
+        /><br />
+        <a href="./user-update-info.html" class="btn">Change Information</a>
+        <p>Favorite restaurant:</p>
+        <p id="user-favorite-restaurant"></p>
+        <br />
+      </div>
+    </main>
+
+    <footer>
+      <div>
+        <p>© Restaurant Website</p>
+      </div>
+    </footer>
+  </body>
+</html>
