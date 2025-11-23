@@ -96,28 +96,6 @@ const restaurantWeeklyMenuModal = (menu) => {
 
   const div = document.createElement('div');
 
-  const button = document.createElement('button');
-
-  // create buttons for weekdays
-  /*const ol = document.createElement('ol');
-  const weekdays = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
-
-  weekdays.forEach((day) => {
-    const li = document.createElement('li');
-    li.innerText = day;
-    ol.appendChild(li);
-  });
-  div.appendChild(ol);
-  ol.classList.add('modal-weekday-tabs');*/
-
   // create daily menu cards
   if (days.length > 0) {
     days.forEach((day) => {
