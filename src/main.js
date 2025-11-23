@@ -1,8 +1,5 @@
 import {
   restaurantRow,
-  restaurantDailyMenuModal,
-  restaurantWeeklyMenuModal,
-  restaurantContactInfoModal,
 } from './components.js';
 import {
   highlightClass,
@@ -13,11 +10,14 @@ import {
 } from './variables.js';
 import {
   getRestaurants,
-  getDailyMenu,
-  getWeeklyMenu,
   getCurrentUserByToken,
   putUser,
 } from './api.js';
+import {
+  renderModalContent,
+  highlightModalMenuItem,
+  initializeModalEventListeners,
+} from './restaurant-modal.js';
 
 let filteredRestaurants = [];
 let selectedRestaurant;
@@ -186,31 +186,7 @@ const showElement = (element) => {
 // modal
 const modal = document.getElementById('modal');
 
-// render elements in ui
-const renderModalContent = async (restaurant, menuType) => {
-  // remove all elements (not "ol") from modal
-  for (let element of modal.children) {
-    if (element.tagName.toLowerCase() !== 'ol') {
-      modal.removeChild(element);
-    }
-  }
-
-  let modalContent;
-
-  // get menu or info based on menuType
-  if (!menuType || menuType === 'daily-menu') {
-    const dailyMenu = await getDailyMenu(restaurant);
-    modalContent = restaurantDailyMenuModal(dailyMenu);
-  } else if (menuType === 'weekly-menu') {
-    const weeklyMenu = await getWeeklyMenu(restaurant);
-    modalContent = restaurantWeeklyMenuModal(weeklyMenu);
-  } else if (menuType === 'contact-info') {
-    modalContent = restaurantContactInfoModal(restaurant);
-  }
-
-  modal.appendChild(modalContent);
-  modal.showModal(); // open modal
-};
+initializeModalEventListeners(() => selectedRestaurant);
 
 const sodexoCheckbox = document.getElementById('show-sodexo');
 const compassCheckbox = document.getElementById('show-compass');
@@ -255,11 +231,8 @@ const renderUI = (restaurants) => {
           addClassToElement(row, highlightClass);
 
           // modal
-          addClassToElement(
-            document.getElementById('daily-menu'),
-            highlightModalMenuClass
-          );
-          renderModalContent(restaurant, false);
+          highlightModalMenuItem('daily-menu');
+          renderModalContent(restaurant, 'daily-menu');
         } else {
           removeClassFromElement(row, highlightClass);
         }
@@ -371,38 +344,6 @@ compassCheckbox?.addEventListener('click', () => {
   filterRestaurants(alphapheticalRestaurants);
   renderUI(filteredRestaurants);
   renderMapMarkers(filteredRestaurants);
-});
-
-// TODO: load all modal content right away, but only show the selected content. this avoids lag and reduces api calls
-
-// modal menu events
-document.getElementById('daily-menu').addEventListener('click', (event) => {
-  removeClassFromAllElements(highlightModalMenuClass, 'li');
-  addClassToElement(event.target, highlightModalMenuClass);
-
-  renderModalContent(selectedRestaurant, event.target.id);
-});
-
-document.getElementById('weekly-menu').addEventListener('click', (event) => {
-  removeClassFromAllElements(highlightModalMenuClass, 'li');
-  addClassToElement(event.target, highlightModalMenuClass);
-
-  renderModalContent(selectedRestaurant, event.target.id);
-});
-
-//
-
-document.getElementById('contact-info').addEventListener('click', (event) => {
-  removeClassFromAllElements(highlightModalMenuClass, 'li');
-  addClassToElement(event.target, highlightModalMenuClass);
-
-  renderModalContent(selectedRestaurant, event.target.id);
-});
-
-document.getElementById('close-modal').addEventListener('click', () => {
-  modal.close();
-  removeClassFromAllElements(highlightModalMenuClass, 'li');
-  removeClassFromAllElements(highlightClass, 'tr');
 });
 
 // render filter options (city, company, distance) to UI
