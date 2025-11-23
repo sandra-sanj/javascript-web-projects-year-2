@@ -25,8 +25,14 @@
           <p>Email:</p>
           <p id="user-profile-email"></p>
           <br />
+
           <p>Favorite restaurant:</p>
-          <p id="user-favorite-restaurant">No favorite restaurant</p>
+          <div>
+            <p id="user-favorite-restaurant">No favorite restaurant</p>
+            <button id="open-favorite-restaurant-modal-btn" class="btn">
+              View Information
+            </button>
+          </div>
           <br />
         </div>
 
@@ -37,6 +43,15 @@
         /><br />
       </div>
       <a href="./user-update-info.html" class="btn">Change Information</a>
+
+      <dialog id="modal">
+        <ol class="modal-menu-tabs">
+          <li id="daily-menu">Daily Menu</li>
+          <li id="weekly-menu">Weekly Menu</li>
+          <li id="contact-info">Contact Info</li>
+          <li id="close-modal">X</li>
+        </ol>
+      </dialog>
     </main>
 
     <footer>
