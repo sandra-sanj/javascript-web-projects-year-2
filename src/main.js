@@ -285,7 +285,7 @@ const filterRestaurants = (unfilteredRestaurants) => {
   return filtered;
 };
 
-// render filter options (city, company, distance) to UI
+// render filter options (city, company) to UI
 const renderFilterOptions = (restaurants) => {
   console.log('render filter options', restaurants);
 
