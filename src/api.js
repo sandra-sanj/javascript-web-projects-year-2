@@ -9,6 +9,20 @@ const options = {
 };
 
 // api requests
+const getRestaurant = async (restaurantId) => {
+  try {
+    const api = `/api/v1/restaurants/${restaurantId}`;
+    const url = baseUrl + api;
+
+    const responseData = await fetchData(url, options);
+    //console.log('responseData', responseData);
+    return responseData; // return restaurants (data) as list
+  } catch (error) {
+    console.error('An error occurred:', error);
+    return [];
+  }
+};
+
 const getRestaurants = async () => {
   try {
     const api = '/api/v1/restaurants';
@@ -160,6 +174,7 @@ const postUserProfilePicture = async (token, formData) => {
 };
 
 export {
+  getRestaurant,
   getRestaurants,
   getDailyMenu,
   getWeeklyMenu,
