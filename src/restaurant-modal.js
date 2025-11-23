@@ -6,7 +6,7 @@ import {
 import {highlightModalMenuClass} from './variables.js';
 import {getDailyMenu, getWeeklyMenu} from './api.js';
 
-// Render modal content
+// render modal content
 const renderModalContent = async (restaurant, menuType) => {
   const modal = document.getElementById('modal');
 
@@ -39,7 +39,7 @@ const renderModalContent = async (restaurant, menuType) => {
   modal.showModal(); // open modal
 };
 
-// Helper function to remove highlight from all modal menu items
+// helper function to remove highlight from all modal menu items
 const removeModalMenuHighlight = () => {
   const modalMenuItems = document.querySelectorAll('#modal ol li');
   modalMenuItems.forEach((item) =>
@@ -47,7 +47,7 @@ const removeModalMenuHighlight = () => {
   );
 };
 
-// Helper function to highlight a modal menu item
+// helper function to highlight a modal menu item
 const highlightModalMenuItem = (menuItemId) => {
   removeModalMenuHighlight();
   const menuItem = document.getElementById(menuItemId);
@@ -56,7 +56,7 @@ const highlightModalMenuItem = (menuItemId) => {
   }
 };
 
-// Initialize modal event listeners
+// initialize modal event listeners
 const initializeModalEventListeners = (getSelectedRestaurant) => {
   const modal = document.getElementById('modal');
 
