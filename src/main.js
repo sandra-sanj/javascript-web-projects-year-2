@@ -336,6 +336,8 @@ compassCheckbox?.addEventListener('click', () => {
   renderMapMarkers(filteredRestaurants);
 });
 
+// TODO: load all modal content right away, but only show the selected content. this avoids lag and reduces api calls
+
 // modal menu events
 document.getElementById('daily-menu').addEventListener('click', (event) => {
   removeClassFromAllElements(highlightModalMenuClass, 'li');
@@ -350,6 +352,8 @@ document.getElementById('weekly-menu').addEventListener('click', (event) => {
 
   renderModalContent(selectedRestaurant, event.target.id);
 });
+
+//
 
 document.getElementById('contact-info').addEventListener('click', (event) => {
   removeClassFromAllElements(highlightModalMenuClass, 'li');
@@ -389,4 +393,28 @@ document.getElementById('active-filters').addEventListener('click', (event) => {
   } else {
     content.style.display = 'flex';
   }
+});
+
+// display nav items based on existense of login token
+const token = localStorage.getItem('token');
+
+const profileLink = document.getElementById('profile-nav-link');
+const loginLink = document.getElementById('login-nav-link');
+const logoutLink = document.getElementById('logout-nav-link');
+
+if (token) {
+  // token exists
+  profileLink.style.display = 'inline';
+  logoutLink.style.display = 'inline';
+  loginLink.style.display = 'none';
+} else {
+  // token does not exist
+  profileLink.style.display = 'none';
+  logoutLink.style.display = 'none';
+  loginLink.style.display = 'inline';
+}
+
+logoutLink.addEventListener('click', (event) => {
+  console.log('clearing local storage...');
+  localStorage.clear();
 });
