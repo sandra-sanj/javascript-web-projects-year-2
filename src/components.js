@@ -1,5 +1,12 @@
+//
 const restaurantRow = (restaurant) => {
   const {name, address, distance} = restaurant;
+
+  const tdFavorite = document.createElement('td');
+  const radio = document.createElement('input');
+  radio.type = 'radio';
+  radio.name = 'favoriteRestaurant';
+  tdFavorite.appendChild(radio);
 
   const tdName = document.createElement('td');
   tdName.innerHTML = name;
@@ -11,6 +18,7 @@ const restaurantRow = (restaurant) => {
   tdDistance.innerHTML = `~&nbsp;${distance.toFixed(1)}km`;
 
   const row = document.createElement('tr');
+  row.appendChild(tdFavorite);
   row.appendChild(tdName);
   row.appendChild(tdAddress);
   row.appendChild(tdDistance);
@@ -18,6 +26,7 @@ const restaurantRow = (restaurant) => {
   return row;
 };
 
+// render food cards in modal
 const formFoodCards = (courses) => {
   const div = document.createElement('div');
 
@@ -67,6 +76,7 @@ const formFoodCards = (courses) => {
   return div;
 };
 
+// render restaurant daily menu in modal
 const restaurantDailyMenuModal = (menu) => {
   const {courses} = menu;
 
@@ -79,14 +89,17 @@ const restaurantDailyMenuModal = (menu) => {
   }
 };
 
+// render restaurant weekly menu in modal
 const restaurantWeeklyMenuModal = (menu) => {
   const {days} = menu;
-  //console.log(days);
+  console.log(days);
 
   const div = document.createElement('div');
 
+  const button = document.createElement('button');
+
   // create buttons for weekdays
-  const ol = document.createElement('ol');
+  /*const ol = document.createElement('ol');
   const weekdays = [
     'Monday',
     'Tuesday',
@@ -103,7 +116,7 @@ const restaurantWeeklyMenuModal = (menu) => {
     ol.appendChild(li);
   });
   div.appendChild(ol);
-  ol.classList.add('modal-weekday-tabs');
+  ol.classList.add('modal-weekday-tabs');*/
 
   // create daily menu cards
   if (days.length > 0) {
@@ -124,6 +137,7 @@ const restaurantWeeklyMenuModal = (menu) => {
   return div;
 };
 
+// render restaurant contact info in modal
 const restaurantContactInfoModal = (restaurant) => {
   const {name, address, postalCode, city, phone, company} = restaurant;
 
