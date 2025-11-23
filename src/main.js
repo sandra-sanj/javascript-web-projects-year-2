@@ -1,6 +1,4 @@
-import {
-  restaurantRow,
-} from './components.js';
+import {restaurantRow} from './components.js';
 import {
   highlightClass,
   closestRestaurantClass,
@@ -8,16 +6,13 @@ import {
   notAvailableId,
   defaultCoordinates,
 } from './variables.js';
-import {
-  getRestaurants,
-  getCurrentUserByToken,
-  putUser,
-} from './api.js';
+import {getRestaurants, getCurrentUserByToken, putUser} from './api.js';
 import {
   renderModalContent,
   highlightModalMenuItem,
   initializeModalEventListeners,
 } from './restaurant-modal.js';
+import {getFilterOrderedList} from './filters.js';
 
 let filteredRestaurants = [];
 let selectedRestaurant;
@@ -183,13 +178,7 @@ const showElement = (element) => {
   element.style.display = '';
 };
 
-// modal
-const modal = document.getElementById('modal');
-
 initializeModalEventListeners(() => selectedRestaurant);
-
-const sodexoCheckbox = document.getElementById('show-sodexo');
-const compassCheckbox = document.getElementById('show-compass');
 
 // get current favorite restaurant id
 let userFavoriteRestaurantId = null;
@@ -278,24 +267,64 @@ const renderUI = (restaurants) => {
 };
 
 const filterRestaurants = (unfilteredRestaurants) => {
-  // add filter to filter out restaurants
-  function checkRestaurantCompany(restaurant) {
-    if (restaurant.company == 'Sodexo' && sodexoCheckbox?.checked) {
-      return true;
-    } else if (
-      restaurant.company == 'Compass Group' &&
-      compassCheckbox?.checked
-    ) {
-      return true;
-    }
-    return false;
-  }
+  // add filter to filter out restaurants which do not pass checkbox check
+  const filtered = unfilteredRestaurants.filter((restaurant) => {
+    // get restaurant specific company and city checkbox
+    const companyCheckbox = document.getElementById(
+      `show-${restaurant.company}`
+    );
+    const cityCheckbox = document.getElementById(`show-${restaurant.city}`);
 
-  filteredRestaurants =
-    unfilteredRestaurants.length > 0
-      ? unfilteredRestaurants.filter(checkRestaurantCompany)
-      : [];
-  console.log(filteredRestaurants);
+    const companyOk = !companyCheckbox || companyCheckbox.checked;
+    const cityOk = !cityCheckbox || cityCheckbox.checked;
+
+    return companyOk && cityOk;
+  });
+
+  //console.log(filteredRestaurants);
+  return filtered;
+};
+
+// render filter options (city, company, distance) to UI
+const renderFilterOptions = (restaurants) => {
+  console.log('render filter options', restaurants);
+
+  const companies = [];
+  const cities = [];
+
+  restaurants.forEach((restaurant) => {
+    const {company, city} = restaurant;
+
+    if (!companies.includes(company)) {
+      companies.push(company);
+    }
+
+    if (!cities.includes(city)) {
+      cities.push(city);
+    }
+  });
+
+  //console.log('companies', companies);
+  //console.log('cities', cities);
+
+  // callback when any checkbox changes
+  const onFilterChange = () => {
+    filteredRestaurants = filterRestaurants(alphapheticalRestaurants);
+    renderUI(filteredRestaurants);
+    renderMapMarkers(filteredRestaurants);
+  };
+
+  // render company filters
+  const companyFilterElement = document.getElementById('company-filter');
+  const companyFilterOl = document.createElement('ol');
+  companyFilterElement.appendChild(companyFilterOl);
+  getFilterOrderedList(companies, companyFilterOl, onFilterChange);
+
+  // render city filters
+  const cityFilterElement = document.getElementById('city-filter');
+  const cityFilterOl = document.createElement('ol');
+  cityFilterElement.appendChild(cityFilterOl);
+  getFilterOrderedList(cities, cityFilterOl, onFilterChange);
 };
 
 // script starts
@@ -315,39 +344,18 @@ const continueAfterLocation = () => {
   );
   alphapheticalRestaurants.push(...sortedByName);
 
+  filteredRestaurants = [...alphapheticalRestaurants];
+
   renderUI(alphapheticalRestaurants);
   renderMap();
   renderMapMarkers(alphapheticalRestaurants);
+
+  renderFilterOptions(alphapheticalRestaurants);
 };
 
 getLocation();
 
 // events
-
-// close modal when mouse clicked outside of it
-modal.addEventListener('click', (event) => {
-  if (event.target === modal) {
-    modal.close();
-    removeClassFromAllElements(highlightClass, 'tr');
-    removeClassFromAllElements(highlightModalMenuClass, 'li');
-  }
-});
-
-// filtering events
-sodexoCheckbox?.addEventListener('click', () => {
-  filterRestaurants(alphapheticalRestaurants);
-  renderUI(filteredRestaurants);
-  renderMapMarkers(filteredRestaurants);
-});
-
-compassCheckbox?.addEventListener('click', () => {
-  filterRestaurants(alphapheticalRestaurants);
-  renderUI(filteredRestaurants);
-  renderMapMarkers(filteredRestaurants);
-});
-
-// render filter options (city, company, distance) to UI
-const renderFilterOptions = () => {};
 
 // filter
 document.getElementById('filter-options').addEventListener('click', (event) => {
