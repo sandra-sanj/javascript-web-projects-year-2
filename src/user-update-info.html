@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update User Information</title>
+    <link rel="stylesheet" href="./styles/main.css" />
+    <script type="module" src="user.js" defer></script>
+  </head>
+  <body>
+    <nav>
+      <a href="./site.html">Restaurants</a>
+      <a href="./user.html" id="profile-nav-link">Profile</a>
+      <a href="./user-login.html" id="login-nav-link">Log In</a>
+      <a href="./site.html" id="logout-nav-link">Log Out</a>
+    </nav>
+
+    <main>
+      <h1>Update User Information</h1>
+      <div class="form-container">
+        <form id="update-username-form">
+          <label for="update-username">New username:</label><br />
+          <input type="text" id="update-username" name="username" /><br />
+          <input type="submit" value="Update" />
+        </form>
+
+        <form id="update-passsord-form">
+          <label for="update-password">New password:</label><br />
+          <input type="password" id="update-password" name="password" /><br />
+          <label for="update-password2">New password again:</label><br />
+          <input type="password" id="update-password2" name="password2" /><br />
+          <input type="submit" value="Update" />
+        </form>
+
+        <form id="update-email-form">
+          <label for="update-email">New email:</label><br />
+          <input type="email" id="update-email" name="email" /><br />
+          <input type="submit" value="Update" />
+        </form>
+
+        <form id="update-avatar-form">
+          <label for="avatar">New profile picture:</label>
+          <input
+            type="file"
+            id="avatar"
+            name="avatar"
+            accept="image/png, image/jpeg, image/jpg"
+          /><br />
+          <input type="submit" value="Update" />
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <div>
+        <p>© Restaurant Website</p>
+      </div>
+    </footer>
+  </body>
+</html>
