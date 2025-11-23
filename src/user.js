@@ -24,7 +24,7 @@ if (registerForm) {
     }
 
     // check that passwords match
-    if ((formData.get('password'), formData.get('password2'))) {
+    if (formData.get('password') !== formData.get('password2')) {
       alert('Passwords do not match.');
       return;
     }
@@ -40,7 +40,7 @@ if (registerForm) {
 
     // redirect to main site if register successful
     if (newUserResponse) {
-      location.href = './site.html';
+      location.href = './index.html';
     }
   });
 }
@@ -63,7 +63,7 @@ if (loginForm) {
     if (loginResponse) {
       // save token to localStorage
       localStorage.setItem('token', loginResponse.token);
-      location.href = './site.html';
+      location.href = './index.html';
     } else {
       alert('Login failed. Incorrect username or password.');
     }
