@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log In</title>
+    <link rel="stylesheet" href="./styles/main.css" />
+    <script type="module" src="user.js" defer></script>
+  </head>
+  <body>
+    <nav>
+      <a href="./site.html">Restaurants</a>
+      <a href="./user.html" id="profile-nav-link">Profile</a>
+      <a href="./user-login.html" id="login-nav-link">Log In</a>
+      <a href="./site.html" id="logout-nav-link">Log Out</a>
+    </nav>
+
+    <main>
+      <h1>Log In</h1>
+      <div class="form-container">
+        <form id="login">
+          <label for="username">Username:</label><br />
+          <input type="text" id="username" name="username" /><br />
+          <label for="password">Password:</label><br />
+          <input type="password" id="password" name="password" /><br />
+          <input type="submit" value="Log In" />
+        </form>
+        <a href="./user-register.html" class="btn">Register New User</a>
+      </div>
+    </main>
+
+    <footer>
+      <div>
+        <p>© Restaurant Website</p>
+      </div>
+    </footer>
+  </body>
+</html>
