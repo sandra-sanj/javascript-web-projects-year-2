@@ -1,5 +1,12 @@
 import {baseUrl, lang} from './variables.js';
-import {fetchData} from './utils.js';
+import fetchData from './utils.js';
+
+const options = {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+};
 
 // api requests
 const getRestaurants = async () => {
@@ -7,21 +14,9 @@ const getRestaurants = async () => {
     const api = '/api/v1/restaurants';
     const url = baseUrl + api;
 
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const response = await fetchData(url, options);
-    console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    console.log('fetch data', data);
-
-    return [...data]; // return restaurants (data) as list
+    const responseData = await fetchData(url, options);
+    //console.log('responseData', responseData);
+    return [...responseData]; // return restaurants (data) as list
   } catch (error) {
     console.error('An error occurred:', error);
     return [];
@@ -30,24 +25,12 @@ const getRestaurants = async () => {
 
 const getDailyMenu = async (restaurant) => {
   try {
-    //console.log('id', restaurant._id);
     const api = `/api/v1/restaurants/daily/${restaurant._id}/${lang}`;
     const url = baseUrl + api;
 
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const response = await fetch(url, options);
-    //console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    //console.log('fetch data', data);
-    return data;
+    const responseData = await fetchData(url, options);
+    //console.log('responseData', responseData);
+    return responseData;
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -59,20 +42,9 @@ const getWeeklyMenu = async (restaurant) => {
     const api = `/api/v1/restaurants/weekly/${restaurant._id}/${lang}`;
     const url = baseUrl + api;
 
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const response = await fetch(url, options);
-    //console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    //console.log('fetch data', data);
-    return data;
+    const responseData = await fetchData(url, options);
+    //console.log('responseData', responseData);
+    return responseData;
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -83,20 +55,9 @@ const getIsUsernameAvailable = async (username) => {
     const api = `/api/v1/users/available/${username}`;
     const url = baseUrl + api;
 
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const response = await fetch(url, options);
-    //console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    //console.log('fetch data', data);
-    return data;
+    const responseData = await fetchData(url, options);
+    //console.log('responseData', responseData);
+    return responseData;
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -107,21 +68,15 @@ const postNewUser = async (user) => {
     const api = '/api/v1/users';
     const url = baseUrl + api;
 
-    const options = {
+    const responseData = await fetchData(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(user),
-    };
-
-    const response = await fetch(url, options);
-    //console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    //console.log('fetch data', data);
-    return data;
+    });
+    //console.log('responseData', responseData);
+    return responseData;
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -132,21 +87,15 @@ const postLogInUser = async (user) => {
     const api = '/api/v1/auth/login';
     const url = baseUrl + api;
 
-    const options = {
+    const responseData = await fetchData(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(user),
-    };
-
-    const response = await fetch(url, options);
-    //console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    //console.log('fetch data', data);
-    return data;
+    });
+    //console.log('responseData', responseData);
+    return responseData;
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -157,21 +106,15 @@ const getCurrentUserByToken = async (token) => {
     const api = '/api/v1/users/token';
     const url = baseUrl + api;
 
-    const options = {
+    const responseData = await fetchData(url, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
-    };
-
-    const response = await fetch(url, options);
-    //console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    //console.log('fetch data', data);
-    return data;
+    });
+    //console.log('responseData', responseData);
+    return responseData;
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -182,23 +125,16 @@ const putUser = async (token, user) => {
     const api = '/api/v1/users';
     const url = baseUrl + api;
 
-    const options = {
+    const responseData = await fetchData(url, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(user),
-    };
-    console.log(options);
-
-    const response = await fetch(url, options);
-    //console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    //console.log('fetch data', data);
-    return data;
+    });
+    //console.log('responseData', responseData);
+    return responseData;
   } catch (error) {
     console.error('An error occurred:', error);
   }
@@ -209,22 +145,15 @@ const postUserProfilePicture = async (token, formData) => {
     const api = '/api/v1/users/avatar';
     const url = baseUrl + api;
 
-    const options = {
+    const responseData = await fetchData(url, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
       },
       body: formData,
-    };
-    console.log(options);
-
-    const response = await fetch(url, options);
-    //console.log('response', response);
-    if (!response.ok) throw new Error('Invalid Input!');
-
-    const data = await response.json();
-    //console.log('fetch data', data);
-    return data;
+    });
+    //console.log('responseData', responseData);
+    return responseData;
   } catch (error) {
     console.error('An error occurred:', error);
   }
