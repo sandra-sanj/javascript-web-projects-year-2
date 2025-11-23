@@ -13,36 +13,34 @@ if (registerForm) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
-    //console.log(formData);
 
+    // check if username is available
     const isUsernameAvailable = await getIsUsernameAvailable(
       formData.get('username')
     );
-    //console.log('isUsernameAvailable', isUsernameAvailable);
+    if (!isUsernameAvailable.available) {
+      alert('Username is not available.');
+      return;
+    }
 
     // check that passwords match
-    const passwordsMatch = (password, password2) => {
-      return password === password2;
+    if ((formData.get('password'), formData.get('password2'))) {
+      alert('Passwords do not match.');
+      return;
+    }
+
+    // save fields to object
+    const userObject = {
+      username: formData.get('username'),
+      password: formData.get('password'),
+      email: formData.get('email'),
     };
 
-    if (
-      isUsernameAvailable &&
-      passwordsMatch(formData.get('password'), formData.get('password2'))
-    ) {
-      // save fields to object
-      const userObject = {
-        username: formData.get('username'),
-        password: formData.get('password'),
-        email: formData.get('email'),
-      };
+    const newUserResponse = await postNewUser(userObject);
 
-      const newUserResponse = await postNewUser(userObject);
-      //console.log(newUserResponse);
-
-      // redirect to main site if register successful
-      if (newUserResponse) {
-        location.href = './site.html';
-      }
+    // redirect to main site if register successful
+    if (newUserResponse) {
+      location.href = './site.html';
     }
   });
 }
@@ -53,7 +51,6 @@ if (loginForm) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
-    //console.log(formData);
 
     const userObject = {
       username: formData.get('username'),
@@ -61,13 +58,14 @@ if (loginForm) {
     };
 
     const loginResponse = await postLogInUser(userObject);
-    //console.log(loginResponse);
 
     // save token and redirect to main site if login successful
     if (loginResponse) {
       // save token to localStorage
       localStorage.setItem('token', loginResponse.token);
       location.href = './site.html';
+    } else {
+      alert('Login failed. Incorrect username or password.');
     }
   });
 }
