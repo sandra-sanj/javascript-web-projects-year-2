@@ -325,6 +325,10 @@ footer div {
 }
 
 /* add style to buttons and only submit type inputs */
+.btn {
+  margin-top: 20px;
+}
+
 .btn,
 input[type='submit'] {
   padding: 6px 14px;
@@ -349,11 +353,18 @@ input[type='submit']:hover {
 }
 
 /* add style to other inputs */
-input {
+input:not([type='submit']) {
+  height: 25px;
+  font-size: 14px;
+
   border-radius: 2px;
   border-style: solid;
   border-color: rgb(119, 136, 115);
   border-width: 1.5px;
+}
+
+input[type='file'] {
+  border-style: none;
 }
 
 .form-container {
@@ -372,4 +383,36 @@ form {
   justify-content: center;
 
   row-gap: 3px;
+}
+
+#user-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  background-color: rgb(241, 243, 224);
+  padding: 20px;
+
+  border-radius: 10px;
+  border-style: solid;
+  border-color: rgb(119, 136, 115);
+  border-width: 1.5px;
+}
+
+#user-container div {
+  margin-right: 40px;
+}
+
+#user-profile-picture {
+  width: 150px;
+  height: 150px;
+
+  border-style: solid;
+  border-color: rgb(119, 136, 115);
+  border-width: 2px;
+}
+
+#profile-nav-link,
+#logout-nav-link {
+  display: none;
 }
