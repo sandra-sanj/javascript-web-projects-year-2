@@ -11,10 +11,19 @@ import {
   notAvailableId,
   defaultCoordinates,
 } from './variables.js';
-import {getRestaurants, getDailyMenu, getWeeklyMenu} from './api.js';
+import {
+  getRestaurants,
+  getDailyMenu,
+  getWeeklyMenu,
+  getCurrentUserByToken,
+  putUser,
+} from './api.js';
 
 let filteredRestaurants = [];
 let selectedRestaurant;
+
+// login token
+const token = localStorage.getItem('token');
 
 // map
 let selfCoordinates;
@@ -206,6 +215,14 @@ const renderModalContent = async (restaurant, menuType) => {
 const sodexoCheckbox = document.getElementById('show-sodexo');
 const compassCheckbox = document.getElementById('show-compass');
 
+// get current favorite restaurant id
+let userFavoriteRestaurantId = null;
+if (token) {
+  const currentUser = await getCurrentUserByToken(token);
+  userFavoriteRestaurantId = currentUser.favouriteRestaurant;
+}
+//console.log('userFavoriteRestaurantId', userFavoriteRestaurantId);
+
 const renderUI = (restaurants) => {
   const restaurantsTable = document.querySelector('#restaurants tbody');
 
@@ -224,7 +241,7 @@ const renderUI = (restaurants) => {
   removeClassFromAllElements(closestRestaurantClass, 'tr');
 
   if (restaurants.length > 0) {
-    restaurants.forEach((restaurant) => {
+    restaurants.forEach(async (restaurant) => {
       const row = restaurantRow(restaurant);
 
       // add event to table row
@@ -253,6 +270,26 @@ const renderUI = (restaurants) => {
       if (restaurant.name === closestRestaurant.name) {
         addClassToElement(row, closestRestaurantClass);
       }
+
+      const radio = row.querySelector('input[type="radio"]');
+
+      // make users favorite restaurant radio button selected
+      if (restaurant._id === userFavoriteRestaurantId) {
+        radio.checked = true;
+      }
+
+      // update users favorite restaurant in api
+      radio.addEventListener('change', async (event) => {
+        if (event.target.checked && token) {
+          const userObject = {favouriteRestaurant: restaurant._id};
+          await putUser(token, userObject);
+        }
+      });
+
+      // prevent radio button click from opening restaurant modal
+      radio.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
     });
     showElement(restaurantsTable);
   } else {
@@ -396,8 +433,6 @@ document.getElementById('active-filters').addEventListener('click', (event) => {
 });
 
 // display nav items based on existense of login token
-const token = localStorage.getItem('token');
-
 const profileLink = document.getElementById('profile-nav-link');
 const loginLink = document.getElementById('login-nav-link');
 const logoutLink = document.getElementById('logout-nav-link');
