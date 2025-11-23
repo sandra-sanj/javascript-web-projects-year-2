@@ -1,4 +1,5 @@
 import {
+  getRestaurant,
   getIsUsernameAvailable,
   postNewUser,
   postLogInUser,
@@ -6,6 +7,11 @@ import {
   putUser,
   postUserProfilePicture,
 } from './api.js';
+import {
+  renderModalContent,
+  highlightModalMenuItem,
+  initializeModalEventListeners,
+} from './restaurant-modal.js';
 
 const registerForm = document.getElementById('register');
 if (registerForm) {
@@ -74,7 +80,7 @@ const token = localStorage.getItem('token');
 
 // set username information in html if logged in and elements exist
 if (token) {
-  getCurrentUserByToken(token).then((currentUserResponse) => {
+  getCurrentUserByToken(token).then(async (currentUserResponse) => {
     console.log(currentUserResponse);
 
     if (currentUserResponse) {
@@ -100,6 +106,29 @@ if (token) {
       if (profilePictureElement) {
         profilePictureElement.src = currentUserResponse.avatar;
       }*/
+
+      let favoriteRestaurant = null;
+      const profileFavoriteRestaurantElement = document.getElementById(
+        'user-favorite-restaurant'
+      );
+
+      if (profileFavoriteRestaurantElement) {
+        favoriteRestaurant = await getRestaurant(
+          currentUserResponse.favouriteRestaurant
+        );
+        console.log(favoriteRestaurant.name);
+        profileFavoriteRestaurantElement.innerText = favoriteRestaurant.name;
+
+        document
+          .getElementById('open-favorite-restaurant-modal-btn')
+          .addEventListener('click', async (event) => {
+            console.log('open restaurant modal');
+            highlightModalMenuItem('daily-menu');
+            await renderModalContent(favoriteRestaurant, 'daily-menu');
+          });
+      }
+
+      initializeModalEventListeners(() => favoriteRestaurant);
     }
   });
 }
