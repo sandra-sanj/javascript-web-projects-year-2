@@ -304,6 +304,10 @@ const renderFilterOptions = (restaurants) => {
     }
   });
 
+  // sort aplhabetically
+  companies.sort();
+  cities.sort();
+
   //console.log('companies', companies);
   //console.log('cities', cities);
 
