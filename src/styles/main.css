@@ -84,6 +84,11 @@ td {
   padding: 0;
 }
 
+#modal div {
+  padding: 20px;
+  background-color: rgb(255, 240, 221);
+}
+
 #map {
   min-height: 400px;
   max-height: 600px;
@@ -183,7 +188,6 @@ div:has(> .food-card) {
   flex-wrap: wrap;
   gap: 20px;
   padding: 10px;
-  background-color: rgb(255, 240, 221);
 }
 
 .food-card {
@@ -192,7 +196,7 @@ div:has(> .food-card) {
   justify-content: space-between;
   align-items: stretch;
 
-  background-color: rgb(226, 161, 111);
+  background-color: rgb(226, 161, 111) !important;
   border-radius: 20px;
 
   padding: 14px 16px;
@@ -215,8 +219,9 @@ div:has(> .food-card) {
 .food-card div {
   display: flex;
   flex-direction: column;
-  margin: 10px;
   flex: 1;
+
+  background-color: rgb(226, 161, 111) !important;
 }
 
 .food-card div:first-child {
@@ -238,8 +243,7 @@ div:has(> .food-card) {
   width: 100%;
 }
 
-#filter-options,
-#active-filters {
+#filter-options {
   background-color: #777;
   color: white;
   cursor: pointer;
@@ -256,8 +260,7 @@ div:has(> .food-card) {
 }
 
 .active,
-#filter-options:hover,
-#active-filters:hover {
+#filter-options:hover {
   background-color: #555;
 }
 
@@ -270,43 +273,25 @@ div:has(> .food-card) {
 }
 
 #filter-options,
-#active-filters,
 .collapsible-content {
   box-sizing: border-box;
 }
 
-/* contact chips */
-.contact-chips div {
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 5px;
-  flex: 1;
+#company-filter ol li,
+#city-filter ol li {
+  list-style: none;
 }
 
-.chip {
-  display: inline-block;
-  padding: 0 20px;
-  height: 40px;
-  line-height: 40px;
-  border-radius: 15px;
-  background-color: #f1f1f1;
+.filters {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+
+  margin-left: 50px;
+  margin-right: 50px;
 }
 
-.closebtn {
-  padding-left: 10px;
-  color: #888;
-  font-weight: bold;
-  float: right;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.closebtn:hover {
-  color: #000;
-}
-
-/* filters */
-
+/* footer */
 footer {
   height: 200px;
   background-color: rgb(119, 136, 115);
