@@ -7,7 +7,7 @@ import {
   highlightClass,
   highlightModalMenuClass,
   removeClassFromAllElements,
-} from './variables.js';
+} from './utils/variables.js';
 import {getDailyMenu, getWeeklyMenu} from './api.js';
 
 // render modal content
