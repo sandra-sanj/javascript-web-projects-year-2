@@ -2,13 +2,13 @@ import {
   restaurantDailyMenuModal,
   restaurantWeeklyMenuModal,
   restaurantContactInfoModal,
-} from './components.js';
+} from './restaurant.js';
 import {
   highlightClass,
   highlightModalMenuClass,
   removeClassFromAllElements,
-} from './utils/variables.js';
-import {getDailyMenu, getWeeklyMenu} from './api.js';
+} from '../utils/variables.js';
+import {getDailyMenu, getWeeklyMenu} from '../api/api.js';
 
 // render modal content
 const renderModalContent = async (restaurant, menuType) => {

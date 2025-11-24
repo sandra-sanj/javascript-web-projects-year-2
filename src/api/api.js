@@ -1,5 +1,5 @@
-import {baseUrl, lang} from './utils/variables.js';
-import fetchData from './utils/fetchData.js';
+import {baseUrl, lang} from '../utils/variables.js';
+import fetchData from '../utils/fetchData.js';
 
 const options = {
   method: 'GET',
