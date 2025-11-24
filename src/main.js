@@ -9,7 +9,7 @@ import {
   removeClassFromElement,
   hideElement,
   showElement,
-} from './variables.js';
+} from './utils/variables.js';
 import {getRestaurants, getCurrentUserByToken, putUser} from './api.js';
 import {
   renderModalContent,
@@ -125,8 +125,17 @@ const renderUI = (restaurants) => {
   removeClassFromAllElements(closestRestaurantClass, 'tr');
 
   if (restaurants.length > 0) {
+
+    // remove favorite column if not logged in
+    if (!token) {
+      const favoriteTableHeader = document.getElementById(
+        'favorite-table-header'
+      );
+      document.getElementById('table-headers').removeChild(favoriteTableHeader);
+    }
+
     restaurants.forEach(async (restaurant) => {
-      const row = restaurantRow(restaurant);
+      const row = restaurantRow(restaurant, token);
 
       // add event to table row
       row.addEventListener('click', () => {
@@ -152,25 +161,30 @@ const renderUI = (restaurants) => {
         addClassToElement(row, closestRestaurantClass);
       }
 
-      const radio = row.querySelector('input[type="radio"]');
+      // render radio buttons if user logged in
+      if (token) {
+        const radio = row.querySelector('input[type="radio"]');
 
-      // make users favorite restaurant radio button selected
-      if (restaurant._id === userFavoriteRestaurantId) {
-        radio.checked = true;
-      }
-
-      // update users favorite restaurant in api
-      radio.addEventListener('change', async (event) => {
-        if (event.target.checked && token) {
-          const userObject = {favouriteRestaurant: restaurant._id};
-          await putUser(token, userObject);
+        // make users favorite restaurant radio button selected
+        if (restaurant._id === userFavoriteRestaurantId) {
+          radio.checked = true;
         }
-      });
 
-      // prevent radio button click from opening restaurant modal
-      radio.addEventListener('click', (event) => {
-        event.stopPropagation();
-      });
+        // update users favorite restaurant in api
+        radio.addEventListener('change', async (event) => {
+          if (event.target.checked && token) {
+            const userObject = {favouriteRestaurant: restaurant._id};
+            await putUser(token, userObject);
+          }
+        });
+
+        // prevent radio button click from opening restaurant modal
+        radio.addEventListener('click', (event) => {
+          event.stopPropagation();
+        });
+      } else {
+        console.log('remove favorites column from table');
+      }
     });
     showElement(restaurantsTable);
   } else {
