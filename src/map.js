@@ -1,3 +1,8 @@
+import {
+  highlightModalMenuItem,
+  renderModalContent,
+} from './restaurant-modal.js';
+
 const renderMapMarkers = (restaurants, map, markers) => {
   markers.clearLayers();
 
@@ -22,9 +27,27 @@ const renderMapMarkers = (restaurants, map, markers) => {
       <p>${phone}</p>
       <p>${company}</p>
       <p>~&nbsp;${distance.toFixed(1)}km</p>
+      <button class="btn marker-btn">View</button>
       `
     );
+
+    // add event to marker button
+    marker.on('popupopen', () => {
+      const button = document.querySelector('.marker-btn');
+      if (button) {
+        button.addEventListener('click', () => {
+          console.log('View button clicked for', restaurant.name);
+
+          // modal
+          highlightModalMenuItem('daily-menu');
+          renderModalContent(restaurant, 'daily-menu');
+        });
+      }
+    });
+
     markers.addLayer(marker);
+
+    console.log('marker', marker);
   });
 
   markers.addTo(map);
