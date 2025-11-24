@@ -1,10 +1,14 @@
 import {restaurantRow} from './components.js';
 import {
+  defaultCoordinates,
   highlightClass,
   closestRestaurantClass,
-  highlightModalMenuClass,
   notAvailableId,
-  defaultCoordinates,
+  removeClassFromAllElements,
+  addClassToElement,
+  removeClassFromElement,
+  hideElement,
+  showElement,
 } from './variables.js';
 import {getRestaurants, getCurrentUserByToken, putUser} from './api.js';
 import {
@@ -13,6 +17,8 @@ import {
   initializeModalEventListeners,
 } from './restaurant-modal.js';
 import {getFilterOrderedList} from './filters.js';
+import {renderNav} from './nav.js';
+import {renderMapMarkers, renderMap} from './map.js';
 
 let filteredRestaurants = [];
 let selectedRestaurant;
@@ -63,65 +69,6 @@ const addDistanceToRestaurants = (restaurants) => {
   return mappedRestaurants;
 };
 
-const renderMapMarkers = (restaurants) => {
-  restaurantMarkers.clearLayers();
-
-  restaurants.forEach((restaurant) => {
-    const {
-      name,
-      address,
-      postalCode,
-      city,
-      phone,
-      company,
-      location,
-      distance,
-    } = restaurant;
-
-    const [rLongitude, rLatitude] = location.coordinates;
-
-    const marker = L.marker([rLatitude, rLongitude]).bindPopup(
-      `<h3>${name}</h3>
-      <p>${address}</p>
-      <p>${postalCode}, ${city}</p>
-      <p>${phone}</p>
-      <p>${company}</p>
-      <p>~&nbsp;${distance.toFixed(1)}km</p>
-      `
-    );
-    restaurantMarkers.addLayer(marker);
-  });
-
-  restaurantMarkers.addTo(map);
-};
-
-const renderMap = () => {
-  map = L.map('map').setView(
-    [selfCoordinates.latitude, selfCoordinates.longitude],
-    13
-  );
-
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution:
-      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  }).addTo(map);
-
-  const userIcon = L.icon({
-    iconUrl:
-      'https://cdn.jsdelivr.net/gh/pointhi/leaflet-color-markers@master/img/marker-icon-red.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    shadowSize: [41, 41],
-  });
-
-  L.marker([selfCoordinates.latitude, selfCoordinates.longitude], {
-    icon: userIcon,
-  }).addTo(map);
-};
-
 const locationSuccess = (position) => {
   selfCoordinates = {
     latitude: position.coords.latitude,
@@ -151,34 +98,6 @@ const getLocation = () => {
     locationElement.innerText = 'Geolocation is not supported by this browser.';
   }
 };
-
-// class
-const removeClassFromAllElements = (className, elementType) => {
-  const elements = document.querySelectorAll(elementType);
-  elements.forEach((element) => {
-    if (element.classList.contains(className)) {
-      element.classList.remove(className);
-    }
-  });
-};
-
-const addClassToElement = (element, className) => {
-  element.classList.add(className);
-};
-
-const removeClassFromElement = (element, className) => {
-  element.classList.remove(className);
-};
-
-const hideElement = (element) => {
-  element.style.display = 'none';
-};
-
-const showElement = (element) => {
-  element.style.display = '';
-};
-
-initializeModalEventListeners(() => selectedRestaurant);
 
 // get current favorite restaurant id
 let userFavoriteRestaurantId = null;
@@ -315,7 +234,7 @@ const renderFilterOptions = (restaurants) => {
   const onFilterChange = () => {
     filteredRestaurants = filterRestaurants(alphapheticalRestaurants);
     renderUI(filteredRestaurants);
-    renderMapMarkers(filteredRestaurants);
+    renderMapMarkers(filteredRestaurants, map, restaurantMarkers);
   };
 
   // render company filters
@@ -341,6 +260,8 @@ const alphapheticalRestaurants = [];
 
 // function called after location has been saved
 const continueAfterLocation = () => {
+  renderNav(token);
+
   restaurantsWithDistance.push(...addDistanceToRestaurants(restaurants));
 
   const sortedByName = [...restaurantsWithDistance].sort(
@@ -351,17 +272,16 @@ const continueAfterLocation = () => {
   filteredRestaurants = [...alphapheticalRestaurants];
 
   renderUI(alphapheticalRestaurants);
-  renderMap();
-  renderMapMarkers(alphapheticalRestaurants);
+  map = renderMap(selfCoordinates);
+  renderMapMarkers(alphapheticalRestaurants, map, restaurantMarkers);
 
   renderFilterOptions(alphapheticalRestaurants);
 };
 
 getLocation();
+initializeModalEventListeners(() => selectedRestaurant);
 
-// events
-
-// filter
+// filter element
 document.getElementById('filter-options').addEventListener('click', (event) => {
   event.target.classList.toggle('active');
 
@@ -371,38 +291,4 @@ document.getElementById('filter-options').addEventListener('click', (event) => {
   } else {
     content.style.display = 'block';
   }
-  //renderFilterOptions();
-});
-
-document.getElementById('active-filters').addEventListener('click', (event) => {
-  event.target.classList.toggle('active');
-
-  const content = event.target.nextElementSibling;
-  if (content.style.display === 'flex') {
-    content.style.display = 'none';
-  } else {
-    content.style.display = 'flex';
-  }
-});
-
-// display nav items based on existense of login token
-const profileLink = document.getElementById('profile-nav-link');
-const loginLink = document.getElementById('login-nav-link');
-const logoutLink = document.getElementById('logout-nav-link');
-
-if (token) {
-  // token exists
-  profileLink.style.display = 'inline';
-  logoutLink.style.display = 'inline';
-  loginLink.style.display = 'none';
-} else {
-  // token does not exist
-  profileLink.style.display = 'none';
-  logoutLink.style.display = 'none';
-  loginLink.style.display = 'inline';
-}
-
-logoutLink.addEventListener('click', (event) => {
-  console.log('clearing local storage...');
-  localStorage.clear();
 });
