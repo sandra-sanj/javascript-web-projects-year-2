@@ -7,6 +7,7 @@ import {
   putUser,
   postUserProfilePicture,
 } from './api.js';
+import {renderNav} from './nav.js';
 import {
   renderModalContent,
   highlightModalMenuItem,
@@ -133,21 +134,7 @@ if (token) {
   });
 }
 
-// display nav items based on existense of login token
-document.getElementById('profile-nav-link').style.display = token
-  ? 'inline'
-  : 'none';
-document.getElementById('login-nav-link').style.display = token
-  ? 'none'
-  : 'inline';
-document.getElementById('logout-nav-link').style.display = token
-  ? 'inline'
-  : 'none';
-
-// clear local storage when logging out
-document.getElementById('logout-nav-link').addEventListener('click', () => {
-  localStorage.clear();
-});
+renderNav(token);
 
 // update user information
 
