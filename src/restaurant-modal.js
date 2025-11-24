@@ -3,20 +3,20 @@ import {
   restaurantWeeklyMenuModal,
   restaurantContactInfoModal,
 } from './components.js';
-import {highlightModalMenuClass} from './variables.js';
+import {
+  highlightClass,
+  highlightModalMenuClass,
+  removeClassFromAllElements,
+} from './variables.js';
 import {getDailyMenu, getWeeklyMenu} from './api.js';
 
 // render modal content
 const renderModalContent = async (restaurant, menuType) => {
   const modal = document.getElementById('modal');
 
-  if (!modal) {
-    console.error('Modal not found');
-    return;
-  }
-
   // remove all elements (not "ol") from modal
-  for (let element of modal.children) {
+  const modalChildren = modal.children;
+  for (let element of modalChildren) {
     if (element.tagName.toLowerCase() !== 'ol') {
       modal.removeChild(element);
     }
@@ -70,6 +70,7 @@ const initializeModalEventListeners = (getSelectedRestaurant) => {
     if (event.target === modal) {
       modal.close();
       removeModalMenuHighlight();
+      removeClassFromAllElements(highlightClass, 'tr');
     }
   });
 
@@ -115,6 +116,7 @@ const initializeModalEventListeners = (getSelectedRestaurant) => {
     closeModalBtn.addEventListener('click', () => {
       modal.close();
       removeModalMenuHighlight();
+      removeClassFromAllElements(highlightClass, 'tr');
     });
   }
 };
