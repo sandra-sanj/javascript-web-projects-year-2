@@ -225,8 +225,6 @@ div:has(> .food-card) {
   display: flex;
   flex-direction: column;
   flex: 1;
-
-  background-color: rgb(226, 161, 111) !important;
 }
 
 .food-card div:first-child {
@@ -249,7 +247,7 @@ div:has(> .food-card) {
 }
 
 #filter-options {
-  background-color: #777;
+  background-color: rgb(119, 136, 115);
   color: white;
   cursor: pointer;
 
@@ -266,15 +264,19 @@ div:has(> .food-card) {
 
 .active,
 #filter-options:hover {
-  background-color: #555;
+  background-color: rgb(119, 136, 115);
 }
 
 .collapsible-content {
-  padding: 0 18px;
+  padding: 18px;
   display: none;
   overflow: hidden;
-  background-color: #b4a2a2;
+  background-color: rgb(210, 220, 182);
   width: 100%;
+
+  border-style: solid;
+  border-color: rgb(119, 136, 115);
+  border-width: 1.5px;
 }
 
 #filter-options,
@@ -282,18 +284,39 @@ div:has(> .food-card) {
   box-sizing: border-box;
 }
 
-#company-filter ol li,
-#city-filter ol li {
-  list-style: none;
-}
-
 .filters {
   display: flex;
-  justify-content: space-between;
-  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+}
 
-  margin-left: 50px;
-  margin-right: 50px;
+.filters > div {
+  background-color: rgb(185, 200, 182);
+
+  border-radius: 5px;
+  border-style: solid;
+  border-color: rgb(119, 136, 115);
+  border-width: 2px;
+
+  flex: 1;
+}
+
+.filters div p {
+  padding-left: 20px;
+}
+
+.filters div div ol {
+  padding: 10px;
+  column-count: 2;
+  column-gap: 20px;
+  font-size: 14px;
+}
+
+.filters div div ol li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* footer */
