@@ -130,7 +130,12 @@ const renderUI = (restaurants) => {
       const favoriteTableHeader = document.getElementById(
         'favorite-table-header'
       );
-      document.getElementById('table-headers').removeChild(favoriteTableHeader);
+
+      if (favoriteTableHeader) {
+        document
+          .getElementById('table-headers')
+          .removeChild(favoriteTableHeader);
+      }
     }
 
     restaurants.forEach(async (restaurant) => {
@@ -181,8 +186,6 @@ const renderUI = (restaurants) => {
         radio.addEventListener('click', (event) => {
           event.stopPropagation();
         });
-      } else {
-        console.log('remove favorites column from table');
       }
     });
     showElement(restaurantsTable);
@@ -194,7 +197,7 @@ const renderUI = (restaurants) => {
     const p = document.createElement('p');
     p.innerText = 'Data not available';
     p.id = notAvailableId;
-    document.querySelector('body').appendChild(p);
+    document.querySelector('main').appendChild(p);
   }
 };
 
