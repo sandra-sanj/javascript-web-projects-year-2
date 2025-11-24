@@ -82,11 +82,14 @@ const restaurantDailyMenuModal = (menu) => {
 
   if (courses.length > 0) {
     return formFoodCards(courses);
-  } else {
-    const p = document.createElement('p');
-    p.innerText = 'Not available';
-    return p;
   }
+
+  const p = document.createElement('p');
+  p.innerText = 'Not available';
+
+  const div = document.createElement('div');
+  div.appendChild(p);
+  return div;
 };
 
 // render restaurant weekly menu in modal
