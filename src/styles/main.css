@@ -8,6 +8,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+
+  min-width: 670px;
 }
 
 main {
@@ -29,6 +31,8 @@ table {
   margin: 0;
   padding: 0;
   width: 100%;
+
+  font-size: 15px;
 
   border-style: solid;
   border-color: rgb(119, 136, 115);
@@ -82,11 +86,12 @@ td {
   height: 60%;
   /*padding: 20px 40px;*/
   padding: 0;
+
+  background-color: rgb(255, 240, 221);
 }
 
 #modal div {
   padding: 20px;
-  background-color: rgb(255, 240, 221);
 }
 
 #map {
@@ -228,7 +233,7 @@ div:has(> .food-card) {
   flex: 2; /* bigger */
 }
 
-.food-card > div:last-child {
+.food-card div:last-child {
   flex: 1; /* smaller */
 }
 
@@ -317,8 +322,8 @@ footer div {
 .btn,
 input[type='submit'] {
   padding: 6px 14px;
-  background-color: rgb(241, 243, 224);
-  color: #545454;
+  background-color: rgb(161, 188, 152);
+  color: white;
 
   font-size: 16px;
   text-align: center;
@@ -333,7 +338,7 @@ input[type='submit'] {
 
 .btn:hover,
 input[type='submit']:hover {
-  background-color: rgb(232, 234, 204);
+  background-color: rgb(161, 188, 152);
   color: #3d3d3d;
 }
 
@@ -353,13 +358,25 @@ input[type='file'] {
 }
 
 .form-container {
-  width: 200px;
+  width: 240px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 
   row-gap: 20px;
+}
+
+.form-container form {
+  justify-content: space-between;
+
+  background-color: rgb(241, 243, 224);
+  padding: 20px;
+
+  border-radius: 10px;
+  border-style: solid;
+  border-color: rgb(119, 136, 115);
+  border-width: 1.5px;
 }
 
 form {
