@@ -1,4 +1,4 @@
-import {baseUrl, lang} from './variables.js';
+import {baseUrl, lang} from './utils/variables.js';
 import fetchData from './utils/fetchData.js';
 
 const options = {
