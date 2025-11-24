@@ -117,7 +117,6 @@ if (token) {
         favoriteRestaurant = await getRestaurant(
           currentUserResponse.favouriteRestaurant
         );
-        console.log(favoriteRestaurant.name);
         profileFavoriteRestaurantElement.innerText = favoriteRestaurant.name;
 
         document
@@ -152,19 +151,20 @@ if (updateUsernameForm) {
     );
     //console.log(isUsernameAvailable);
 
-    if (isUsernameAvailable) {
+    if (isUsernameAvailable.available) {
       // save fields to object
       const userObject = {
         username: formData.get('username'),
       };
 
       const newUsernameResponse = await putUser(token, userObject);
-      console.log(newUsernameResponse);
 
       if (newUsernameResponse) {
         updateUsernameForm.reset();
         alert('Username updated successfully!');
       }
+    } else {
+      alert('Could not update username. Username is not available.');
     }
   });
 }
@@ -188,12 +188,13 @@ if (updatePasswordForm) {
       };
 
       const newPasswordResponse = await putUser(token, userObject);
-      console.log(newPasswordResponse);
 
       if (newPasswordResponse) {
         updatePasswordForm.reset();
         alert('Password updated successfully!');
       }
+    } else {
+      alert('Could not update password. Passwords do not match.');
     }
   });
 }
@@ -216,11 +217,12 @@ if (updateEmailForm) {
     };
 
     const newEmailResponse = await putUser(token, userObject);
-    console.log(newEmailResponse);
 
     if (newEmailResponse) {
       updateEmailForm.reset();
       alert('Email updated successfully!');
+    } else {
+      alert('Could not update email address.');
     }
   });
 }
@@ -237,11 +239,12 @@ if (updateAvatarForm) {
     }
 
     const avatarUploadResponse = await postUserProfilePicture(token, formData);
-    console.log(avatarUploadResponse);
 
     if (avatarUploadResponse) {
       updateAvatarForm.reset();
       alert('Avatar updated successfully!');
+    } else {
+      alert('Could not update avatar.');
     }
   });
 }
