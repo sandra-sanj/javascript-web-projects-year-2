@@ -1,4 +1,4 @@
-import {restaurantRow} from './components.js';
+import {restaurantRow} from './components/restaurant.js';
 import {
   defaultCoordinates,
   highlightClass,
@@ -10,15 +10,15 @@ import {
   hideElement,
   showElement,
 } from './utils/variables.js';
-import {getRestaurants, getCurrentUserByToken, putUser} from './api.js';
+import {getRestaurants, getCurrentUserByToken, putUser} from './api/api.js';
 import {
   renderModalContent,
   highlightModalMenuItem,
   initializeModalEventListeners,
-} from './restaurant-modal.js';
-import {getFilterOrderedList} from './filters.js';
-import {renderNav} from './nav.js';
-import {renderMapMarkers, renderMap} from './map.js';
+} from './components/restaurant-modal.js';
+import {getFilterOrderedList} from './components/filters.js';
+import {renderNav} from './components/nav.js';
+import {renderMapMarkers, renderMap} from './components/map.js';
 
 let filteredRestaurants = [];
 let selectedRestaurant;

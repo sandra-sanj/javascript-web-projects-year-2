@@ -6,13 +6,13 @@ import {
   getCurrentUserByToken,
   putUser,
   postUserProfilePicture,
-} from './api.js';
-import {renderNav} from './nav.js';
+} from './api/api.js';
+import {renderNav} from './components/nav.js';
 import {
   renderModalContent,
   highlightModalMenuItem,
   initializeModalEventListeners,
-} from './restaurant-modal.js';
+} from './components/restaurant-modal.js';
 
 const registerForm = document.getElementById('register');
 if (registerForm) {
