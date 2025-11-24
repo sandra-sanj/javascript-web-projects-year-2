@@ -64,7 +64,7 @@ const addDistanceToRestaurants = (restaurants) => {
     );
     return {...restaurant, distance: distance};
   });
-  console.log('restaurants with distances', mappedRestaurants);
+  //console.log('restaurants with distances', mappedRestaurants);
 
   return mappedRestaurants;
 };
@@ -74,7 +74,7 @@ const locationSuccess = (position) => {
     latitude: position.coords.latitude,
     longitude: position.coords.longitude,
   };
-  console.log(selfCoordinates);
+  //console.log(selfCoordinates);
 
   const latitude = position.coords.latitude;
   const longitude = position.coords.longitude;
@@ -125,7 +125,6 @@ const renderUI = (restaurants) => {
   removeClassFromAllElements(closestRestaurantClass, 'tr');
 
   if (restaurants.length > 0) {
-
     // remove favorite column if not logged in
     if (!token) {
       const favoriteTableHeader = document.getElementById(
@@ -220,7 +219,7 @@ const filterRestaurants = (unfilteredRestaurants) => {
 
 // render filter options (city, company) to UI
 const renderFilterOptions = (restaurants) => {
-  console.log('render filter options', restaurants);
+  //console.log('render filter options', restaurants);
 
   const companies = [];
   const cities = [];
