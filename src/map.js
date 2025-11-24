@@ -36,8 +36,6 @@ const renderMapMarkers = (restaurants, map, markers) => {
       const button = document.querySelector('.marker-btn');
       if (button) {
         button.addEventListener('click', () => {
-          console.log('View button clicked for', restaurant.name);
-
           // modal
           highlightModalMenuItem('daily-menu');
           renderModalContent(restaurant, 'daily-menu');
@@ -46,8 +44,6 @@ const renderMapMarkers = (restaurants, map, markers) => {
     });
 
     markers.addLayer(marker);
-
-    console.log('marker', marker);
   });
 
   markers.addTo(map);
