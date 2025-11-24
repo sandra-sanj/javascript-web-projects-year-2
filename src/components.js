@@ -1,12 +1,16 @@
-//
-const restaurantRow = (restaurant) => {
+const restaurantRow = (restaurant, token) => {
   const {name, address, distance} = restaurant;
 
-  const tdFavorite = document.createElement('td');
-  const radio = document.createElement('input');
-  radio.type = 'radio';
-  radio.name = 'favoriteRestaurant';
-  tdFavorite.appendChild(radio);
+  const row = document.createElement('tr');
+
+  if (token) {
+    const tdFavorite = document.createElement('td');
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = 'favoriteRestaurant';
+    tdFavorite.appendChild(radio);
+    row.appendChild(tdFavorite);
+  }
 
   const tdName = document.createElement('td');
   tdName.innerHTML = name;
@@ -17,8 +21,6 @@ const restaurantRow = (restaurant) => {
   const tdDistance = document.createElement('td');
   tdDistance.innerHTML = `~&nbsp;${distance.toFixed(1)}km`;
 
-  const row = document.createElement('tr');
-  row.appendChild(tdFavorite);
   row.appendChild(tdName);
   row.appendChild(tdAddress);
   row.appendChild(tdDistance);
