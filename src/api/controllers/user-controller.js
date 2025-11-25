@@ -68,7 +68,7 @@ const postUser = async (req, res, next) => {
   // check if username exists
   if (await getUserByUsername(req.body.username)) {
     return res
-      .status(201)
+      .status(400)
       .json({message: 'Cannot add user, username already exists'});
   }
 
